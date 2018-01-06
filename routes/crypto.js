@@ -16,6 +16,7 @@ cryptoModule.prototype.checkTicker = async function checkResult(){
 }
 
 cryptoModule.prototype.getAllPairs = function(roomId,bot){
+  console.log("ABOUT TO REQUEST PRICES to roomid", roomId );
   binance.prices(function(ticker){
     bot.sendRichTextMessage(roomId,ticker,function(){})
   })
