@@ -1,7 +1,7 @@
 let port = process.env.PORT || 1349;
 let sparklite = require("sparklite");
 let botdomain = process.env.TOMY_URL;
-let CheckCurrency = require('./routes/checkCripto');
+let CheckCurrency = require('./routes/crypto');
 let TestApi = require('./routes/temp.js')
 
 console.log("bot domain: " + botdomain)
@@ -18,7 +18,7 @@ sparkBot.on('message', function(event){
    if (mail[1] === "cisco.com"){
 
      let message = "your room id is : " + event.roomId;
-     testApi.getAllPairs(event.roomId,sparkBot)
+     checkCurrency.getAllPairs(event.roomId,sparkBot)
    } else {
 
      sparkBot.sendMessage(event.roomId, "Hi, sorry to tell you that but you're not allowed to proceed",function(){});

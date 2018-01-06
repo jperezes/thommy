@@ -21,7 +21,7 @@ cryptoModule.prototype.getAllPairs = function(roomId,bot){
   })
 }
 
-cryptoModule.prototype.getPairPrice= function(roomId,bot){
+cryptoModule.prototype.getPairPrice = function(roomId,bot){
   binance.prices(function(ticker){
     bot.sendRichTextMessage(roomId,ticker,function(){})
   })
