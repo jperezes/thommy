@@ -18,7 +18,7 @@ sparkBot.on('message', function(event){
    if (mail[1] === "cisco.com"){
 
      let message = "your room id is : " + event.roomId;
-     sparkBot.sendMessage(event.roomId, message ,function(){});
+     testApi.getAllPairs(event.roomId,sparkBot)
    } else {
 
      sparkBot.sendMessage(event.roomId, "Hi, sorry to tell you that but you're not allowed to proceed",function(){});

@@ -15,4 +15,16 @@ cryptoModule.prototype.checkTicker = async function checkResult(){
 
 }
 
+cryptoModule.prototype.getAllPairs(roomId,bot){
+  binance.prices(function(ticker){
+    bot.sendRichTextMessage(roomId,ticker,function(){})
+  })
+}
+
+cryptoModule.prototype.getPairPrice(roomId,bot){
+  binance.prices(function(ticker){
+    bot.sendRichTextMessage(roomId,ticker,function(){})
+  })
+}
+
 module.exports = cryptoModule;
