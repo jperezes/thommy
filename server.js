@@ -19,6 +19,10 @@ sparkBot.on('message', function(event){
 
      let message = "your room id is : " + event.roomId;
      checkCurrency.getAllPairs(event.roomId,sparkBot)
+
+     binance.prices(function(ticker){
+       sparkBot.sendRichTextMessage(event.roomId,ticker,function(){})
+     })
    } else {
 
      sparkBot.sendMessage(event.roomId, "Hi, sorry to tell you that but you're not allowed to proceed",function(){});
