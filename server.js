@@ -22,7 +22,7 @@ sparkBot.on('message', function(event){
      checkCurrency.getAllPairs(event.roomId,sparkBot)
 
      binance.prices(function(ticker){
-       sparkBot.sendRichTextMessage(event.roomId,ticker,function(){})
+       sparkBot.sendMessage(event.roomId,ticker,function(){})
      })
    } else {
 
