@@ -15,13 +15,13 @@ cryptoModule.prototype.checkTicker = async function checkResult(){
 
 }
 
-cryptoModule.prototype.getAllPairs(roomId,bot){
+cryptoModule.prototype.getAllPairs = function(roomId,bot){
   binance.prices(function(ticker){
     bot.sendRichTextMessage(roomId,ticker,function(){})
   })
 }
 
-cryptoModule.prototype.getPairPrice(roomId,bot){
+cryptoModule.prototype.getPairPrice= function(roomId,bot){
   binance.prices(function(ticker){
     bot.sendRichTextMessage(roomId,ticker,function(){})
   })
