@@ -1,14 +1,14 @@
 let port = process.env.PORT || 1349;
 let sparklite = require("sparklite");
-let botdomain = process.env.NUCKY_URL;
+let botdomain = process.env.TOMY_URL;
 let CheckCurrency = require('./routes/checkCripto');
 let TestApi = require('./routes/temp.js')
 
 console.log("bot domain: " + botdomain)
-console.log("bot key: " + process.env.NUCKY_KEY)
+console.log("bot key: " + process.env.TOMY_KEY)
 let checkCurrency = new CheckCurrency()
 let testApi = new TestApi()
-let sparkBot = new sparklite.SparkBot(process.env.NUCKY_KEY, port, botdomain);
+let sparkBot = new sparklite.SparkBot(process.env.TOMY_KEY, port, botdomain);
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0
 sparkBot.printHelloWorld();
 sparkBot.initializeWeebHooks();
