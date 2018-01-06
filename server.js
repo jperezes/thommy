@@ -20,7 +20,8 @@ sparkBot.on('message', function(event){
 
      let message = "your room id is : " + event.roomId;
      checkCurrency.getAllPairs(event.roomId,sparkBot)
-     binance.prices(function(ticker,sparkBot){
+     sparkBot.sendMessage(event.roomId,"test",function(){})
+     binance.prices(function(ticker){
        sparkBot.sendMessage(event.roomId,ticker,function(){})
      })
    } else {
