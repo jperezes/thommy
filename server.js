@@ -11,7 +11,6 @@ let testApi = new TestApi()
 let sparkBot = new sparklite.SparkBot(process.env.TOMY_KEY, port, botdomain);
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0
 sparkBot.printHelloWorld();
-sparkBot.initializeWeebHooks();
 sparkBot.on('message', function(event){
   console.log('I have received an event!!!')
    var mail = event.personEmail.split('@');
