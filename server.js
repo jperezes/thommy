@@ -3,6 +3,7 @@ let sparklite = require("sparklite");
 let botdomain = process.env.TOMY_URL;
 let CheckCurrency = require('./routes/crypto');
 let TestApi = require('./routes/temp.js')
+const binance = require('node-binance-api');
 
 console.log("bot domain: " + botdomain)
 console.log("bot key: " + process.env.TOMY_KEY)
