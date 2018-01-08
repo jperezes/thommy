@@ -2,6 +2,7 @@
   "name": "NuckyBot",
   "version": "1.0.0",
   "dependencies": {
+    "async-request": "^1.2.0",
     "bluebird": "^3.5.0",
     "node-binance-api": "^0.3.0",
     "node-schedule": "^1.2.1",
@@ -9,8 +10,7 @@
     "request": "^2.81.0",
     "request-promise": "^4.2.0",
     "schedule": "^0.1.0",
-    "sparklite": "^1.0.55",
-    "node-binance-api": "^0.3.0"
+    "sparklite": "^1.0.55"
   },
   "engines": {
     "node": "7.6.0"
