@@ -31,11 +31,11 @@ sparkBot.sparkBotEmitter.on('message', function(event){
   console.log(JSON.stringify(event));
 });
 
-sparkBot.on('rooms', function(event){
+sparkBot.sparkBotEmitter.on('rooms', function(event){
     console.log(JSON.stringify(event));
 });
 
-sparkBot.on('memberships', function (event){
+sparkBot.sparkBotEmitter.on('memberships', function (event){
     console.log(JSON.stringify(event));
 });
 
