@@ -1,14 +1,14 @@
 let port = process.env.PORT || 1349;
 let SparkBot = require("./routes/sparkRegNew.js");
 let botdomain = process.env.TOMY_URL;
-//let CheckCurrency = require('./routes/crypto');
-//let TestApi = require('./routes/temp.js')
-//const binance = require('node-binance-api');
+let CheckCurrency = require('./routes/crypto');
+let TestApi = require('./routes/temp.js')
+const binance = require('node-binance-api');
 
 console.log("bot domain: " + botdomain)
 console.log("bot key: " + process.env.TOMY_KEY)
-//let checkCurrency = new CheckCurrency()
-//let testApi = new TestApi()
+let checkCurrency = new CheckCurrency()
+let testApi = new TestApi()
 let sparkBot = new SparkBot(process.env.TOMY_KEY, port, botdomain);
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0
 
