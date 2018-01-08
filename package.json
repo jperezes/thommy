@@ -4,17 +4,12 @@
   "dependencies": {
     "async-request": "^1.2.0",
     "bluebird": "^3.5.0",
-    "express": "^4.16.2",
     "node-binance-api": "^0.3.0",
     "node-schedule": "^1.2.1",
     "promise": "^7.1.1",
     "request": "^2.81.0",
     "request-promise": "^4.2.0",
-<<<<<<< HEAD
     "schedule": "^0.1.0",
-=======
-    "schedule": "^0.1.0"
->>>>>>> clean and test for azure
   },
   "engines": {
     "node": "7.6.0"
