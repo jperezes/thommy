@@ -42,8 +42,7 @@ class SparkBotApi {
     this.sparkBotEmitter = new SparkBotEmitter();
     this.app = express()
     this.initServer(this.app);
-    //this.initializeWeebHooks();
-    this.getMyDetails()
+    this.initializeWeebHooks();
 	}
 
   /**
@@ -61,9 +60,7 @@ class SparkBotApi {
          'resource': 'messages',
          'event': 'all'
     }
-
     let data = Object.assign( options, {body:messageData});
-
     const response = await sendRequest(data, 'registerWebHooks');
     return response;
   }
@@ -85,7 +82,7 @@ class SparkBotApi {
    */
   async deleteWebHook (webHook) {
       let options = Object.assign({},defaults);
-      options.url = defaults.url + '/v1/webhooks/'  + webHook.id
+      options.url = options.url + '/v1/webhooks/'  + webHook.id
       options.method = 'DELETE'
       const result = await sendRequest(options,'deleteWebHook');
   }
@@ -110,7 +107,6 @@ class SparkBotApi {
         console.log("error deleting the webhook: " + e)
     }
     return false;
-
   }
 
   /**
@@ -185,7 +181,6 @@ class SparkBotApi {
     } catch(e) {
       console.log("error handling the post request: " + e)
     }
-
   }
 
   /**
@@ -206,11 +201,10 @@ class SparkBotApi {
         await this.handlePostRequest(req)
         res.send("webhook received")
       } catch(e) {
-        res.send("error")
+        res.send("Error processing the post request")
       }
 
     });
-
     router.route('/init').get(async(req, res) =>  {
       try{
         await this.initializeWeebHooks();
@@ -220,7 +214,6 @@ class SparkBotApi {
       }
 
     });
-
     app.listen(port, function(port) {
         console.log(('\n\nBot started at port: ' + port).red)
     })

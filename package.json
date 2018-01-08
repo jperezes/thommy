@@ -10,7 +10,6 @@
     "request": "^2.81.0",
     "request-promise": "^4.2.0",
     "schedule": "^0.1.0",
-    "sparklite": "^1.0.55"
   },
   "engines": {
     "node": "7.6.0"
