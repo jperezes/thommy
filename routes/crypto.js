@@ -1,31 +1,35 @@
 let rp = require('request-promise');
 let schedule = require('node-schedule');
 const binance = require('node-binance-api');
+const api = require('binance');
 let cryptoModule = function(){};
 
-cryptoModule.prototype.checkTicker = async function checkResult(){
-  console.log("about to parse the data from kraken")
-  res = await rp({url:"https://api.kraken.com/0/public/Ticker?pair=XXRPZEUR",method:'GET'});
-  res = JSON.parse(res)
-  console.log(res.result.XXRPZEUR.c[0])
-
-  binance.prices(function(ticker) {
-	console.log("Price of BNB: ", ticker.BNBBTC);
+const binanceRest = new api.BinanceRest({
+    key: process.env.BIN_KEY, // Get this from your account on binance.com
+    secret: process.env.BIN_SEC, // Same for this
+    timeout: 15000, // Optional, defaults to 15000, is the request time out in milliseconds
+    recvWindow: 10000000, // Optional, defaults to 5000, increase if you're getting timestamp errors
+    disableBeautification: false
+    /*
+     * Optional, default is false. Binance's API returns objects with lots of one letter keys.  By
+     * default those keys will be replaced with more descriptive, longer ones.
+     */
 });
 
-}
-
-cryptoModule.prototype.getAllPairs = function(roomId,bot){
-  console.log("ABOUT TO REQUEST PRICES to roomid", roomId );
-  binance.prices(function(ticker){
-    bot.sendRichTextMessage(roomId,ticker,function(){})
-  })
-}
-
-cryptoModule.prototype.getPairPrice = function(roomId,bot){
-  binance.prices(function(ticker){
-    bot.sendRichTextMessage(roomId,ticker,function(){})
-  })
+cryptoModule.prototype.checkBalance = async function(bot,roomId) {
+      let reply = "";
+      result = await binanceRest.account();
+      let balances = result.balances;
+      if (typeof(balances !== 'undefined')) {
+        console.log("Juan your balance in binance is:\n")
+        balances.forEach(item => {
+          if(parseFloat(item.free) > 0.001) {
+            reply = reply + item.asset + ": " + item.free + "\n"
+          }
+        })
+      }
+      bot.sendMessage(roomId,reply,function(){})
+      console.log(reply);
 }
 
 module.exports = cryptoModule;
