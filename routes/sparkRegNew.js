@@ -51,7 +51,7 @@ class SparkBotApi {
     console.log("SPARK API - about to register webhooks");
     let options = Object.assign({},this.config);
     options.url = options.url + "/v1/webhooks"
-    const callbackListener = 'webhooklistener'
+    const callbackListener = 'v1/webhooklistener'
     const targetUrl = 'http://' + options.botdomain + '/' + callbackListener;
     const messageData = {
          'name': 'GlobalListener',
@@ -165,7 +165,7 @@ class SparkBotApi {
         return false;
       }
       if (req.body.resource == 'messages') {
-          console.log("POST event received:\n" + JSON.srtingify(req))
+          console.log("POST event received:\n" + JSON.stringify(req))
           var message = req.body.data;
           await this.getBotName();
           if (message.personEmail !== this.botName) {
