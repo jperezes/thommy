@@ -165,7 +165,7 @@ class SparkBotApi {
         return "error parsing the body";
       }
       if (req.body.resource == 'messages') {
-          console.log("POST event received:\n" + JSON.stringify(req))
+          console.log("POST event received:\n" + req)
           var message = req.body.data;
           await this.getBotName();
           if (message.personEmail !== this.botName) {
