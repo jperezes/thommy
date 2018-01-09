@@ -17,7 +17,7 @@ const binanceRest = new api.BinanceRest({
 });
 
 cryptoModule.prototype.checkBalance = async function(bot,roomId) {
-      let reply = "";
+      let reply = "My master, your balance is: \n";
       result = await binanceRest.account();
       let balances = result.balances;
       if (typeof(balances !== 'undefined')) {
