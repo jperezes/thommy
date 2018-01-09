@@ -8,9 +8,9 @@ process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0
 const criptoApi = new CryptoApi()
 sparkBot.sparkBotEmitter.on('message', function(event){
   console.log('I have received an event!!!')
-   var mail = event.personEmail.split('@');
+   var mail = event.personEmail;
    console.log("message received + :" + JSON.stringify(event))
-   if (mail[0] === process.env.MY_MAIL){
+   if (mail === process.env.MY_MAIL){
      criptoApi.checkBalance(sparkBot,event.roomId);
    } else {
      sparkBot.sendMessage(event.roomId, "Hi, sorry to tell you that but you're not allowed to proceed",function(){});
