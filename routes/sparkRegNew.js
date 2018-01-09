@@ -162,7 +162,7 @@ class SparkBotApi {
   async handlePostRequest(req) {
     try {
       if (typeof(req.body) === 'undefined') {
-        return false;
+        return "error parsing the body";
       }
       if (req.body.resource == 'messages') {
           console.log("POST event received:\n" + JSON.stringify(req))
@@ -177,9 +177,11 @@ class SparkBotApi {
             message.person = personDetails
             this.sparkBotEmitter.emit('message',message)
           }
+          return "Webhook received"
       }
     } catch(e) {
       console.log("error handling the post request: " + e)
+      return e
     }
   }
 
@@ -198,10 +200,10 @@ class SparkBotApi {
     router.route('/webhooklistener').post(async (req, res) => {
       try {
         console.log("webhook received")
-        await this.handlePostRequest(req)
-        res.send("webhook received")
+        let result = await this.handlePostRequest(req)
+        res.send(result)
       } catch(e) {
-        res.send("Error processing the post request")
+        res.send("Error processing the post request" + e)
       }
 
     });
