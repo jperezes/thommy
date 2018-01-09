@@ -166,7 +166,7 @@ class SparkBotApi {
           'roomId': roomId,
           'text': txt
       }
-      Object.assign(options,messageData)
+      Object.assign(options,{body:messageData})
       const result = await sendRequest(options, 'sendMessage');
   }
   async sendMessageToDirectPerson(personEmail, txt) {
@@ -176,7 +176,7 @@ class SparkBotApi {
             'toPersonEmail': personEmail,
             'text': txt
         }
-        Object.assign(options,messageData)
+        Object.assign(options,{body:messageData})
         const result = await sendRequest(options, 'sendMessage');
         return result
   }
