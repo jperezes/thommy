@@ -159,6 +159,28 @@ class SparkBotApi {
     }
   }
 
+  async sendMessage(roomId, txt) {
+    let options = Object.assign({},defaults);
+    options.url = options.url + "/v1/messages/"
+      var messageData = {
+          'roomId': roomId,
+          'text': txt
+      }
+      Object.assign(options,messageData)
+      const result = await sendRequest(options, 'sendMessage');
+  }
+  async sendMessageToDirectPerson(personEmail, txt) {
+      let options = Object.assign({},defaults);
+      options.url = options.url + "/v1/messages/"
+        var messageData = {
+            'toPersonEmail': personEmail,
+            'text': txt
+        }
+        Object.assign(options,messageData)
+        const result = await sendRequest(options, 'sendMessage');
+        return result
+  }
+
   async handlePostRequest(req) {
     try {
       if (typeof(req.body) === 'undefined') {
