@@ -3,7 +3,6 @@ let router = express.Router();
 const bodyParser = require("body-parser");
 let rp = require('request-promise');
 const EventEmitter = require('events');
-
 class SparkBotEmitter extends EventEmitter {}
 
 // Default options
@@ -166,6 +165,7 @@ class SparkBotApi {
         return false;
       }
       if (req.body.resource == 'messages') {
+          console.log("POST event received:\n" + JSON.srtingify(req))
           var message = req.body.data;
           await this.getBotName();
           if (message.personEmail !== this.botName) {
