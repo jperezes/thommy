@@ -4,6 +4,8 @@ const binance = require('node-binance-api');
 const api = require('binance');
 let cryptoModule = function(){};
 
+const priceOptions= ["-p","-pi","-pd"];
+
 const binanceRest = new api.BinanceRest({
     key: process.env.BIN_KEY, // Get this from your account on binance.com
     secret: process.env.BIN_SEC, // Same for this
@@ -16,20 +18,49 @@ const binanceRest = new api.BinanceRest({
      */
 });
 
-let parseOrderCommand = function(command) {
+
+async function getPriceFromOptions(array){
+  priceOptions.forEach(item=>{
+    if(array.indexOf(item) !== -1){
+      console.log("Valid index option found")
+      switch (item) {
+        case "-p":
+          return parseFloat(array[array.indexOf(item) + 1]);
+        case "-pi":
+          let lastPrice = await checkLastPairPrice(array[array.indexOf("-pair") + 1])
+          let increment = parseFloat(array[array.indexOf(item) + 1]) / 100;
+          return parseFloat(1 + increment) * lastPrice;
+        case "-pd":
+          let lastPrice = await checkLastPairPrice(array[array.indexOf("-pair") + 1])
+          let decrement = parseFloat(array[array.indexOf(item) + 1]) / 100;
+          return parseFloat(1 - decrement) * lastPrice;
+          default:
+            return "error -- "
+      }
+    }
+  })
+  return "error -- "
+}
+
+async function parseOrderCommand(array) {
   // remove first element of the array as it is -po
-  let array = command.slice(1);
+  let array[0] = ""
   let timestamp = new Date().getTime();
-  let data = Object.assign({},{
-    symbol: array[array.indexOf("-pair") + 1].toUpperCase(),
-    side: array[array.indexOf("-s") + 1].toUpperCase(),
-    type: array[array.indexOf("-t")+1].toUpperCase(),
-    timeInForce:'GTC',
-    quantity: parseInt(array[array.indexOf("-q") + 1]),
-    timestamp:timestamp,
-    price: parseFloat(array[array.indexOf("-p") + 1])
-  });
-  return data;
+  try {
+    let askingPrice = await getPriceFromOptions(array);
+    let data = Object.assign({},{
+      symbol: array[array.indexOf("-pair") + 1].toUpperCase(),
+      side: array[array.indexOf("-s") + 1].toUpperCase(),
+      type: array[array.indexOf("-t")+1].toUpperCase(),
+      timeInForce:'GTC',
+      quantity: parseInt(array[array.indexOf("-q") + 1]),
+      timestamp:timestamp,
+      price: askingPrice
+    });
+    return data;
+  }catch(e) {
+    return e
+  }
 }
 
 async function checkLastPairPrice(pair) {
@@ -84,8 +115,10 @@ cryptoModule.prototype.checkBalance = async function(bot,roomId) {
 }
 
 cryptoModule.prototype.testOrder = async function(array) {
-  let data = parseOrderCommand(array);
+
   try {
+    let data = await parseOrderCommand(array);
+    return "data to be sent is: "  + JSON.stringify(data)
     let validOrder = await validatePrice(data)
     console.log("validOrder is" + validOrder)
     if (validOrder === true){
