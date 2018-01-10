@@ -38,7 +38,7 @@ async function checkLastPairPrice(pair) {
 
 async function validatePrice(data){
   try{
-    let lastPrice = await checkLastPairPrice(pair);
+    let lastPrice = await checkLastPairPrice(data.symbol);
     if(data.side === 'SELL') {
       return lastPrice < data.price
     } else if(data.side === 'BUY') {
@@ -67,7 +67,7 @@ cryptoModule.prototype.checkBalance = async function(bot,roomId) {
 cryptoModule.prototype.testOrder = async function(array) {
   let data = parseOrderCommand(array);
   try {
-    let validOrder = validatePrace(data)
+    let validOrder = validatePrice(data)
     if (validOrder){
       result = await binanceRest.testOrder(data);
       return "success placing the order"
