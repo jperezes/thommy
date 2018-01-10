@@ -39,6 +39,7 @@ cryptoModule.prototype.testOrder = async function() {
         type:"LIMIT",
         timeInForce:"GTC",
         quantity: "200",
+        timestamp:timestamp,
         price:"0.00005804"
       }
       try {
