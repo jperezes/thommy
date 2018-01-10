@@ -33,15 +33,16 @@ async function getPriceFromOptions(array, pair){
   priceOptions.forEach(async (item) =>{
     if(array.indexOf(item) !== -1){
       console.log("Valid index option found")
+      let lastPrice = -1;
       switch (item) {
         case "-p":
           return parseFloat(array[array.indexOf(item) + 1]);
         case "-pi":
-          let lastPrice = await checkLastPairPrice(pair)
+          lastPrice = await checkLastPairPrice(pair)
           let increment = parseFloat(array[array.indexOf(item) + 1]) / 100;
           return parseFloat(1 + increment) * lastPrice;
         case "-pd":
-          let lastPrice = await checkLastPairPrice(pair)
+          lastPrice = await checkLastPairPrice(pair)
           let decrement = parseFloat(array[array.indexOf(item) + 1]) / 100;
           return parseFloat(1 - decrement) * lastPrice;
           default:
@@ -59,6 +60,7 @@ async function parseOrderCommand(array) {
   try {
     let askingPair = array[array.indexOf("-pair") + 1].toUpperCase()
     let askingPrice = await getPriceFromOptions(array,askingPair);
+    if (askingPrice < 0) return "Error price ";
     let data = Object.assign({},{
       symbol: askingPair,
       side: array[array.indexOf("-s") + 1].toUpperCase(),
