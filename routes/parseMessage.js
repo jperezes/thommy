@@ -51,7 +51,7 @@ dialogModule.prototype.parseQuestion = async function(query,bot){
     let options = showMenu()
     reply = criptoApi.testOrder()
     bot.sendMessage(query.roomId,options);
-  } else { else if(arrayQuest[0] === "-h") {
+  } else if(arrayQuest[0] === "-h") {
     let options = showMenu()
     bot.sendRichTextMessage(query.roomId,options);
   } else {
