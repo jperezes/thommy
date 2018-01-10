@@ -30,6 +30,26 @@ let parseOrderCommand = function(array) {
   return data;
 }
 
+async function checkLastPairPrice(pair) {
+  let data = Object.assign({},{symbol:pair})
+  let result = await binanceRest.price()
+  return parseFloat(result.price);
+}
+
+async function validatePrice(data){
+  try{
+    let lastPrice = await checkLastPairPrice(pair);
+    if(data.side === 'SELL') {
+      return lastPrice < data.price
+    } else if(data.side === 'BUY') {
+      return lastPrice > data.price
+    }
+  }catch(e)
+  {
+    return false
+  }
+}
+
 cryptoModule.prototype.checkBalance = async function(bot,roomId) {
       let reply = "My master, your balance is: \n";
       result = await binanceRest.account();
@@ -47,8 +67,14 @@ cryptoModule.prototype.checkBalance = async function(bot,roomId) {
 cryptoModule.prototype.testOrder = async function(array) {
   let data = parseOrderCommand(array);
   try {
-    result = await binanceRest.testOrder(data);
-    return "success placing the order"
+    let validOrder = validatePrace(data)
+    if (validOrder){
+      result = await binanceRest.testOrder(data);
+      return "success placing the order"
+    } else {
+      return "price specified is either lower than current price on sell, or higher than current price on buy, aborting ..."
+    }
+
   } catch (e) {
     console.log("error on the order: ", JSON.stringify(e))
     return "error placing the order " + e
