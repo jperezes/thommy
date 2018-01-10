@@ -16,6 +16,20 @@ const binanceRest = new api.BinanceRest({
      */
 });
 
+let parseOrderCommand = function(array) {
+  let timestamp = new Date().getTime();
+  let data = Object.assign({},{
+    symbol: array[array.indexOf("-pair") + 1].toUpperCase(),
+    side: array[array.indexOf("-s") + 1].toUpperCase(),
+    type: array[array.indexOf("-t")+1].toUpperCase(),
+    timeInForce:'CTG',
+    quantity: parseInt(array[array.indexOf("-q") + 1]),
+    timestamp:timestamp,
+    price: parseFloat(array[array.indexOf("-p") + 1])
+  });
+  return data;
+}
+
 cryptoModule.prototype.checkBalance = async function(bot,roomId) {
       let reply = "My master, your balance is: \n";
       result = await binanceRest.account();
@@ -30,25 +44,16 @@ cryptoModule.prototype.checkBalance = async function(bot,roomId) {
       bot.sendMessage(roomId,reply,function(){})
 }
 
-cryptoModule.prototype.testOrder = async function() {
-      let reply = "My master, your balance is: \n";
-      let timestamp = new Date().getTime();
-      const data = {
-        symbol: "ADABTC",
-        side:"SELL",
-        type:"LIMIT",
-        timeInForce:"GTC",
-        quantity: "200",
-        timestamp:timestamp,
-        price:"0.00005804"
-      }
-      try {
-        result = await binanceRest.testOrder(data);
-        return "success placing the order"
-      } catch (e) {
-        console.log("error on the order: ", JSON.stringify(e))
-        return "error placing the order " + e
-      }
+cryptoModule.prototype.testOrder = async function(array) {
+  let data = parseOrderCommand(array);
+  try {
+    result = await binanceRest.testOrder(data);
+    return "success placing the order"
+  } catch (e) {
+    console.log("error on the order: ", JSON.stringify(e))
+    return "error placing the order " + e
+  }
+
 }
 
 module.exports = cryptoModule;
