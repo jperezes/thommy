@@ -58,7 +58,7 @@ async function validatePrice(data){
   }catch(e)
   {
     console.log("error processing the prices: " + JSON.stringify(e))
-    return e
+    throw new Error('error processing the prices');
   }
 }
 
