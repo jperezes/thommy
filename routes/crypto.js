@@ -33,21 +33,23 @@ async function getPriceFromOptions(array, pair){
   try{
     let lastPrice = await checkLastPairPrice(pair)
     if (lastPrice < 0 || isNaN(lastPrice)) return "error"
+    let askingPrice = 0.0
     let item = "-"
     for (var i = 0, len = array.length; i < len; i++) {
       item = priceOptions[priceOptions.indexOf(array[i])];
       switch (item) {
         case "-p":
           return parseFloat(array[array.indexOf(item) + 1]);
-          break;
         case "-pi":
-          let increment = parseFloat(array[array.indexOf(item) + 1]) / 100;
-          console.log("increment, final price: " + parseFloat(1 + increment) * lastPrice )
-          return parseFloat(1 + increment) * lastPrice;
-          break;
+          let increment = (parseFloat(array[array.indexOf(item) + 1]) / 100)
+          console.log("increment, final price: " + increment)
+          askingPrice = ((1 + increment) * lastPrice).toFixed(5);
+          return parseFloat(askingPrice)
         case "-pd":
           let decrement = parseFloat(array[array.indexOf(item) + 1]) / 100;
-          return parseFloat(1 - decrement) * lastPrice;
+          askingPrice = ((1 - decrement) * lastPrice).toFixed(5);
+          return parseFloat(askingPrice)
+        default:
           break;
       }
     }
