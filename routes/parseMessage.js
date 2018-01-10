@@ -40,7 +40,7 @@ let showMenu = function(){
 
 dialogModule.prototype.parseQuestion = async function(query,bot){
    console.log("THE SCOPE IS: " + scope);
-  let cleanQuestion = query.message.toLowerCase().replace(" thomas","").replace("thomas ","").replace("?","").replace("  "," ").replace("  "," ").;
+  let cleanQuestion = query.message.toLowerCase().replace(" thomas","").replace("thomas ","").replace("?","").replace("  "," ").replace("  "," ");
   let arrayQuest = cleanQuestion.split(" ");
   let reply ="";
   if (arrayQuest[0] === "-pb"){
