@@ -18,6 +18,16 @@ const binanceRest = new api.BinanceRest({
      */
 });
 
+async function checkLastPairPrice(pair) {
+  let data = Object.assign({},{symbol:pair})
+  try {
+    let result = await binanceRest.tickerPrice(data)
+    return parseFloat(result.price);
+  }catch(e) {
+    console.log("error checking price" + e)
+    throw new Error(e);
+  }
+}
 
 async function getPriceFromOptions(array, pair){
   priceOptions.forEach(item=>{
@@ -62,18 +72,6 @@ async function parseOrderCommand(array) {
   }catch(e) {
     return e
   }
-}
-
-async function checkLastPairPrice(pair) {
-  let data = Object.assign({},{symbol:pair})
-  try {
-    let result = await binanceRest.tickerPrice(data)
-    return parseFloat(result.price);
-  }catch(e) {
-    console.log("error checking price" + e)
-    throw new Error(e);
-  }
-
 }
 
 async function validatePrice(data){
