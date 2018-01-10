@@ -16,9 +16,9 @@ const binanceRest = new api.BinanceRest({
      */
 });
 
-let parseOrderCommand = function(data) {
+let parseOrderCommand = function(command) {
   // remove first element of the array as it is -po
-  let array = data.slide(1);
+  let array = command.slide(1);
   let timestamp = new Date().getTime();
   let data = Object.assign({},{
     symbol: array[array.indexOf("-pair") + 1].toUpperCase(),
