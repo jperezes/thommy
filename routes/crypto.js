@@ -2,6 +2,14 @@ let rp = require('request-promise');
 let schedule = require('node-schedule');
 const binance = require('node-binance-api');
 const api = require('binance');
+let TransSchema = require('../model/transactions');
+let mongoose = require('mongoose');
+let cryptoDB = 'mongodb://localhost:27017/cryptoDB';
+
+let con = mongoose.createConnection(cryptoDB);
+let transModel = con.model('transSchema',TransSchema)
+
+
 let cryptoModule = function(){};
 
 const priceOptions= ["-p","-pi","-pd"];
@@ -140,6 +148,10 @@ cryptoModule.prototype.placeOrder = async function(array) {
     console.log("error on the order: ", JSON.stringify(e))
     return "error placing the order " + e
   }
+}
+
+cryptoModule.prototype.saveTransactions = async function(query,bot){
+
 }
 
 module.exports = cryptoModule;

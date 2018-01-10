@@ -3,7 +3,6 @@ let Promise= require('bluebird')
 let CryptoApi = require("./crypto.js");
 const criptoApi = new CryptoApi()
 
-
 let scope = "";
 let currentRegisteringUser = "";
 let reply = "";
