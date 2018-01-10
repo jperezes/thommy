@@ -48,12 +48,11 @@ dialogModule.prototype.parseQuestion = async function(query,bot){
       reply = criptoApi.checkBalance(bot,query.roomId);
       bot.sendMessage(query.roomId,reply)
   } else if(arrayQuest[0] === "-po") {
-    let options = showMenu()
     reply = criptoApi.testOrder()
-    bot.sendMessage(query.roomId,options);
+    bot.sendMessage(query.roomId,reply);
   } else if(arrayQuest[0] === "-h") {
-    let options = showMenu()
-    bot.sendRichTextMessage(query.roomId,options);
+    reply = showMenu()
+    bot.sendRichTextMessage(query.roomId,reply);
   } else {
     bot.sendMessage(query.roomId, "sorry didn't get that typ -h for help");
   }
