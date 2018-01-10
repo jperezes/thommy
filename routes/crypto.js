@@ -32,7 +32,7 @@ async function checkLastPairPrice(pair) {
 async function getPriceFromOptions(array, pair){
   priceOptions.forEach(async (item) =>{
     if(array.indexOf(item) !== -1){
-      console.log("Valid index option found")
+      console.log("Valid index option found: " + item)
       let lastPrice = -1;
       switch (item) {
         case "-p":
@@ -45,8 +45,8 @@ async function getPriceFromOptions(array, pair){
           lastPrice = await checkLastPairPrice(pair)
           let decrement = parseFloat(array[array.indexOf(item) + 1]) / 100;
           return parseFloat(1 - decrement) * lastPrice;
-          default:
-            return "error -- "
+        default:
+            return "error -- from default"
       }
     }
   })
