@@ -50,12 +50,12 @@ async function validatePrice(data){
     let lastPrice = await checkLastPairPrice(data.symbol);
     console.log("requested price is: " + data.price + " last price is: " + lastPrice)
     if(data.side === 'SELL') {
-      if(lastPrice > dataPrice) {
+      if(lastPrice > data.price) {
         console.log("should return false")
       }
       return lastPrice < data.price
     } else if(data.side === 'BUY') {
-      if(lastPrice < dataPrice) {
+      if(lastPrice < data.price) {
         console.log("should return false")
       }
       return lastPrice > data.price
