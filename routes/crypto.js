@@ -32,12 +32,14 @@ let parseOrderCommand = function(array) {
 
 async function checkLastPairPrice(pair) {
   let data = Object.assign({},{symbol:pair})
+  console.log("object 1 is: " + JSON.stringify(data))
   let result = await binanceRest.price()
   return parseFloat(result.price);
 }
 
 async function validatePrice(data){
   try{
+    console.log("object 2  is: " + JSON.stringify(data))
     let lastPrice = await checkLastPairPrice(data.symbol);
     if(data.side === 'SELL') {
       return lastPrice < data.price
