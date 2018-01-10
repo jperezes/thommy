@@ -30,7 +30,7 @@ cryptoModule.prototype.checkBalance = async function(bot,roomId) {
       bot.sendMessage(roomId,reply,function(){})
 }
 
-cryptoModule.prototype.testOrder = async function(bot,roomId) {
+cryptoModule.prototype.testOrder = async function() {
       let reply = "My master, your balance is: \n";
       let timestamp = new Date().getTime();
       const data = {
@@ -47,7 +47,6 @@ cryptoModule.prototype.testOrder = async function(bot,roomId) {
       } catch (e) {
         return "error placing the order " + e
       }
-      bot.sendMessage(roomId,data,function(){})
 }
 
 module.exports = cryptoModule;

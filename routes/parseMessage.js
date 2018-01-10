@@ -46,8 +46,12 @@ dialogModule.prototype.parseQuestion = async function(query,bot){
   if (arrayQuest[0] === "-pb"){
       console.log("abou to print the balance")
       reply = criptoApi.checkBalance(bot,query.roomId);
-      bot.sendMessage(query.roomId,reply,function(){})
-  } else if(arrayQuest[0] === "-h") {
+      bot.sendMessage(query.roomId,reply)
+  } else if(arrayQuest[0] === "-po") {
+    let options = showMenu()
+    reply = criptoApi.testOrder()
+    bot.sendMessage(query.roomId,options);
+  } else { else if(arrayQuest[0] === "-h") {
     let options = showMenu()
     bot.sendRichTextMessage(query.roomId,options);
   } else {
