@@ -49,9 +49,9 @@ dialogModule.prototype.parseQuestion = async function(query,bot){
       bot.sendMessage(query.roomId,reply,function(){})
   } else if(arrayQuest[0] === "-h") {
     let options = showMenu()
-    bot.sendMessage(query.roomId,options,function(){})
+    bot.sendRichTextMessage(query.roomId,options);
   } else {
-      bot.sendMessage(query.roomId, "sorry didn't get that typ -h for help" , function(){})
+    bot.sendMessage(query.roomId, "sorry didn't get that typ -h for help");
   }
   return;
 }

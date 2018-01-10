@@ -180,6 +180,17 @@ class SparkBotApi {
         const result = await sendRequest(options, 'sendMessage');
         return result
   }
+  async sendRichTextMessage(roomId, txt) {
+      let options = Object.assign({},defaults);
+      options.url = options.url + "/v1/messages/"
+      var messageData = {
+          'roomId': roomId,
+          'markdown': txt
+      }
+      Object.assign(options,{body:messageData})
+      const result = await sendRequest(options, 'sendMessage');
+      return result;
+  }
 
   async handlePostRequest(req) {
     try {
