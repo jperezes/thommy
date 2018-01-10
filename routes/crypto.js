@@ -37,16 +37,20 @@ async function getPriceFromOptions(array, pair){
       switch (item) {
         case "-p":
           return parseFloat(array[array.indexOf(item) + 1]);
+          break;
         case "-pi":
           lastPrice = await checkLastPairPrice(pair)
           let increment = parseFloat(array[array.indexOf(item) + 1]) / 100;
           return parseFloat(1 + increment) * lastPrice;
+          break;
         case "-pd":
           lastPrice = await checkLastPairPrice(pair)
           let decrement = parseFloat(array[array.indexOf(item) + 1]) / 100;
           return parseFloat(1 - decrement) * lastPrice;
+          break;
         default:
-            return "error -- from default"
+          return "error -- from default"
+          break;
       }
     }
   })
