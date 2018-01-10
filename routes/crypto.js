@@ -123,14 +123,14 @@ cryptoModule.prototype.checkBalance = async function(bot,roomId) {
       bot.sendMessage(roomId,reply,function(){})
 }
 
-cryptoModule.prototype.testOrder = async function(array) {
+cryptoModule.prototype.placeOrder = async function(array) {
 
   try {
     let data = await parseOrderCommand(array);
     let validOrder = await validatePrice(data)
     console.log("validOrder is" + validOrder)
     if (validOrder === true){
-      result = await binanceRest.testOrder(data);
+      result = await binanceRest.newOrder(data);
       return "success placing the order"
     } else {
       return "price specified is either lower than current price on sell, or higher than current price on buy, aborting ..."
