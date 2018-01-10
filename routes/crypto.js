@@ -33,29 +33,24 @@ async function getPriceFromOptions(array, pair){
   try{
     let lastPrice = await checkLastPairPrice(pair)
     if (lastPrice < 0 || isNaN(lastPrice)) return "error"
-    let askingPrice = priceOptions.forEach(item =>{
-      if(array.indexOf(item) !== -1){
-        console.log("Valid index option found: " + item)
-        switch (item) {
-          case "-p":
-            return parseFloat(array[array.indexOf(item) + 1]);
-            break;
-          case "-pi":
-            let increment = parseFloat(array[array.indexOf(item) + 1]) / 100;
-            console.log("increment, final price: " + parseFloat(1 + increment) * lastPrice )
-            return parseFloat(1 + increment) * lastPrice;
-            break;
-          case "-pd":
-            let decrement = parseFloat(array[array.indexOf(item) + 1]) / 100;
-            return parseFloat(1 - decrement) * lastPrice;
-            break;
-          default:
-            return "error -- from default"
-            break;
-        }
+
+    for (var i = 0, len = priceOptions.length; i < len; i++) {
+      switch (priceOptions[i]) {
+        case "-p":
+          return parseFloat(array[array.indexOf(item) + 1]);
+          break;
+        case "-pi":
+          let increment = parseFloat(array[array.indexOf(item) + 1]) / 100;
+          console.log("increment, final price: " + parseFloat(1 + increment) * lastPrice )
+          return parseFloat(1 + increment) * lastPrice;
+          break;
+        case "-pd":
+          let decrement = parseFloat(array[array.indexOf(item) + 1]) / 100;
+          return parseFloat(1 - decrement) * lastPrice;
+          break;
       }
-    })
-    return askingPrice
+    }
+    return "error valid price option not foud"
   }catch(e) {
     console.log("price calculated: " + e)
     return e
