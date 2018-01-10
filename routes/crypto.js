@@ -22,7 +22,7 @@ let parseOrderCommand = function(array) {
     symbol: array[array.indexOf("-pair") + 1].toUpperCase(),
     side: array[array.indexOf("-s") + 1].toUpperCase(),
     type: array[array.indexOf("-t")+1].toUpperCase(),
-    timeInForce:'CTG',
+    timeInForce:'GTC',
     quantity: parseInt(array[array.indexOf("-q") + 1]),
     timestamp:timestamp,
     price: parseFloat(array[array.indexOf("-p") + 1])
