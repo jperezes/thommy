@@ -42,6 +42,7 @@ async function getPriceFromOptions(array, pair){
             break;
           case "-pi":
             let increment = parseFloat(array[array.indexOf(item) + 1]) / 100;
+            console.log("increment, final price: " + parseFloat(1 + increment) * lastPrice )
             return parseFloat(1 + increment) * lastPrice;
             break;
           case "-pd":
