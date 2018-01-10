@@ -45,6 +45,7 @@ cryptoModule.prototype.testOrder = async function() {
         result = await binanceRest.testOrder(data);
         return "success placing the order"
       } catch (e) {
+        console.log("error on the order: ", JSON.stringify(e))
         return "error placing the order " + e
       }
 }
