@@ -42,7 +42,7 @@ cryptoModule.prototype.testOrder = async function() {
         price:"0.00005804"
       }
       try {
-        result = await binance.testOrder(data);
+        result = await binanceRest.testOrder(data);
         return "success placing the order"
       } catch (e) {
         return "error placing the order " + e
