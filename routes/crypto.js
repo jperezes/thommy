@@ -33,7 +33,7 @@ async function getPriceFromOptions(array, pair){
   try{
     let lastPrice = await checkLastPairPrice(pair)
     if (lastPrice < 0 || isNaN(lastPrice)) return "error"
-    priceOptions.forEach(item =>{
+    let askingPrice = priceOptions.forEach(item =>{
       if(array.indexOf(item) !== -1){
         console.log("Valid index option found: " + item)
         switch (item) {
@@ -54,14 +54,11 @@ async function getPriceFromOptions(array, pair){
         }
       }
     })
-    return "error calculating price"
+    return askingPrice
   }catch(e) {
     console.log("price calculated: " + e)
     return e
   }
-
-
-
 }
 
 async function parseOrderCommand(array) {
