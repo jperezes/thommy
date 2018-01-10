@@ -32,7 +32,7 @@ let showMenu = function(){
   let options = "\n\n Usage:" +
                 "\n      thomas [-h] [-help]  to print options" +
                 "\n              [-pb -e <exchange>] Print your balance in exchange <exchange> \"all\" for total balance" +
-                "\n              [-po -s <side> -t <type> -q <quantity> -p <price>]  Place  new order where:\n    * side: [SELL/BUY] \n   * type: [LIMIT/MARKET] ";
+                "\n              [-po -s <side> -t <type> -q <quantity> -p <price>]  Place  new order where: side: [SELL/BUY] and type: [LIMIT/MARKET] ";
 
 
   return options;
