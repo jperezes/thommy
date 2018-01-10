@@ -21,7 +21,6 @@ cryptoModule.prototype.checkBalance = async function(bot,roomId) {
       result = await binanceRest.account();
       let balances = result.balances;
       if (typeof(balances !== 'undefined')) {
-        console.log("Juan your balance in binance is:\n")
         balances.forEach(item => {
           if(parseFloat(item.free) > 0.001) {
             reply = reply + item.asset + ": " + item.free + "\n"
@@ -29,7 +28,26 @@ cryptoModule.prototype.checkBalance = async function(bot,roomId) {
         })
       }
       bot.sendMessage(roomId,reply,function(){})
-      console.log(reply);
+}
+
+cryptoModule.prototype.testOrder = async function(bot,roomId) {
+      let reply = "My master, your balance is: \n";
+      let timestamp = new Date().getTime();
+      const data = {
+        symbol: "ADABTC",
+        side:"SELL",
+        type:"LIMIT",
+        timeInForce:"GTC",
+        quantity: "200",
+        price:"0.00005804"
+      }
+      try {
+        result = await binance.testOrder(data);
+        return "success placing the order"
+      } catch (e) {
+        return "error placing the order " + e
+      }
+      bot.sendMessage(roomId,data,function(){})
 }
 
 module.exports = cryptoModule;
