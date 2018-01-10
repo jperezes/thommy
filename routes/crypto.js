@@ -33,10 +33,9 @@ async function getPriceFromOptions(array, pair){
   try{
     let lastPrice = await checkLastPairPrice(pair)
     if (lastPrice < 0 || isNaN(lastPrice)) return "error"
-
     let item = "-"
-    for (var i = 0, len = priceOptions.length; i < len; i++) {
-      item = priceOptions[i]
+    for (var i = 0, len = array.length; i < len; i++) {
+      item = priceOptions[priceOptions.indexOf(array[i])];
       switch (item) {
         case "-p":
           return parseFloat(array[array.indexOf(item) + 1]);
@@ -52,6 +51,7 @@ async function getPriceFromOptions(array, pair){
           break;
       }
     }
+    console.log("problem option not foud")
     return "error valid price option not foud"
   }catch(e) {
     console.log("price calculated: " + e)
