@@ -86,7 +86,7 @@ cryptoModule.prototype.checkBalance = async function(bot,roomId) {
 cryptoModule.prototype.testOrder = async function(array) {
   let data = parseOrderCommand(array);
   try {
-    let validOrder = validatePrice(data)
+    let validOrder = await validatePrice(data)
     console.log("validOrder is" + validOrder)
     if (validOrder === true){
       result = await binanceRest.testOrder(data);
