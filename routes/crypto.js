@@ -19,7 +19,7 @@ const binanceRest = new api.BinanceRest({
 });
 
 
-async function getPriceFromOptions(array){
+async function getPriceFromOptions(array, pair){
   priceOptions.forEach(item=>{
     if(array.indexOf(item) !== -1){
       console.log("Valid index option found")
@@ -27,11 +27,11 @@ async function getPriceFromOptions(array){
         case "-p":
           return parseFloat(array[array.indexOf(item) + 1]);
         case "-pi":
-          let lastPrice = await checkLastPairPrice(array[array.indexOf("-pair") + 1])
+          let lastPrice = await checkLastPairPrice(pair)
           let increment = parseFloat(array[array.indexOf(item) + 1]) / 100;
           return parseFloat(1 + increment) * lastPrice;
         case "-pd":
-          let lastPrice = await checkLastPairPrice(array[array.indexOf("-pair") + 1])
+          let lastPrice = await checkLastPairPrice(pair)
           let decrement = parseFloat(array[array.indexOf(item) + 1]) / 100;
           return parseFloat(1 - decrement) * lastPrice;
           default:
@@ -47,9 +47,10 @@ async function parseOrderCommand(array) {
   let array[0] = ""
   let timestamp = new Date().getTime();
   try {
-    let askingPrice = await getPriceFromOptions(array);
+    let askingPair = array[array.indexOf("-pair") + 1].toUpperCase()
+    let askingPrice = await getPriceFromOptions(array,askingPair);
     let data = Object.assign({},{
-      symbol: array[array.indexOf("-pair") + 1].toUpperCase(),
+      symbol: askingPair,
       side: array[array.indexOf("-s") + 1].toUpperCase(),
       type: array[array.indexOf("-t")+1].toUpperCase(),
       timeInForce:'GTC',
