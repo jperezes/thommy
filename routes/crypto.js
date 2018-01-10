@@ -30,7 +30,7 @@ async function checkLastPairPrice(pair) {
 }
 
 async function getPriceFromOptions(array, pair){
-  priceOptions.forEach(async (item) =>{
+  let result = await priceOptions.forEach(async (item) =>{
     if(array.indexOf(item) !== -1){
       console.log("Valid index option found: " + item)
       let lastPrice = -1;
@@ -54,7 +54,7 @@ async function getPriceFromOptions(array, pair){
       }
     }
   })
-  return "error -- "
+  return result
 }
 
 async function parseOrderCommand(array) {
