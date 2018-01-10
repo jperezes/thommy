@@ -34,8 +34,10 @@ async function getPriceFromOptions(array, pair){
     let lastPrice = await checkLastPairPrice(pair)
     if (lastPrice < 0 || isNaN(lastPrice)) return "error"
 
+    let item = "-"
     for (var i = 0, len = priceOptions.length; i < len; i++) {
-      switch (priceOptions[i]) {
+      item = priceOptions[i]
+      switch (item) {
         case "-p":
           return parseFloat(array[array.indexOf(item) + 1]);
           break;
