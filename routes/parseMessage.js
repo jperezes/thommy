@@ -48,7 +48,7 @@ dialogModule.prototype.parseQuestion = async function(query,bot){
       reply = criptoApi.checkBalance(bot,query.roomId);
       bot.sendMessage(query.roomId,reply)
   } else if(arrayQuest[0] === "-po") {
-    reply = criptoApi.testOrder()
+    reply = await criptoApi.testOrder()
     bot.sendMessage(query.roomId,reply);
   } else if(arrayQuest[0] === "-h") {
     reply = showMenu()
