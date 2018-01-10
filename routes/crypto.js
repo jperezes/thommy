@@ -87,6 +87,7 @@ cryptoModule.prototype.testOrder = async function(array) {
   let data = parseOrderCommand(array);
   try {
     let validOrder = validatePrice(data)
+    console.log("validOrder is" + validOrder)
     if (validOrder === true){
       result = await binanceRest.testOrder(data);
       return "success placing the order"
