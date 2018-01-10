@@ -55,7 +55,7 @@ async function getPriceFromOptions(array, pair){
 
 async function parseOrderCommand(array) {
   // remove first element of the array as it is -po
-  let array[0] = ""
+  array[0] = ""
   let timestamp = new Date().getTime();
   try {
     let askingPair = array[array.indexOf("-pair") + 1].toUpperCase()
