@@ -51,19 +51,21 @@ async function validatePrice(data){
     console.log("requested price is: " + data.price + " last price is: " + lastPrice)
     if(data.side === 'SELL') {
       if(lastPrice > data.price) {
-        console.log("should return false")
+        console.log("selling below the current price. Aborting ...")
+        return false
       }
-      return lastPrice < data.price
+      return true
     } else if(data.side === 'BUY') {
       if(lastPrice < data.price) {
-        console.log("should return false")
+        console.log("buying above the current price. Aborting ...")
+        return false
       }
-      return lastPrice > data.price
+      return true
     }
   }catch(e)
   {
-    console.log("error processing the prices: " + JSON.stringify(e))
-    throw new Error('error processing the prices');
+    console.log("error processing the prices: " + e)
+    return false
   }
 }
 
@@ -85,7 +87,7 @@ cryptoModule.prototype.testOrder = async function(array) {
   let data = parseOrderCommand(array);
   try {
     let validOrder = validatePrice(data)
-    if (validOrder){
+    if (validOrder === true){
       result = await binanceRest.testOrder(data);
       return "success placing the order"
     } else {
