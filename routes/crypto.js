@@ -127,7 +127,6 @@ cryptoModule.prototype.testOrder = async function(array) {
 
   try {
     let data = await parseOrderCommand(array);
-    return "data to be sent is: "  + JSON.stringify(data)
     let validOrder = await validatePrice(data)
     console.log("validOrder is" + validOrder)
     if (validOrder === true){
@@ -141,7 +140,6 @@ cryptoModule.prototype.testOrder = async function(array) {
     console.log("error on the order: ", JSON.stringify(e))
     return "error placing the order " + e
   }
-
 }
 
 module.exports = cryptoModule;
