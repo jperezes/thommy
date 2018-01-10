@@ -36,7 +36,7 @@ async function checkLastPairPrice(pair) {
   let data = Object.assign({},{symbol:pair})
   try {
     console.log("object 1 is: " + JSON.stringify(data))
-    let result = await binanceRest.tickerPrice()
+    let result = await binanceRest.tickerPrice(pair)
     return parseFloat(result.price);
   }catch(e) {
     console.log("error checking price" + e)
