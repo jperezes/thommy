@@ -54,6 +54,7 @@ async function getPriceFromOptions(array, pair){
       }
     }
   })
+  console.log("price calculated: " + result)
   return result
 }
 
