@@ -80,6 +80,7 @@ let trend ={
   "BitBay":[String],
   "TokenCard":[String]
 }
+
 requestCurrencies.prototype.scheduleServer = function(bot){
   cryptoModule.checkTicker();
   // schedule.scheduleJob('30 * * * * *', Promise.coroutine(function* () {

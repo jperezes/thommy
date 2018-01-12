@@ -1,13 +1,16 @@
 var mongoose = require('mongoose');
 let Promise= require('bluebird')
+var sleep = require('sleep');
 //mongoose.set('debug', true);
 
 var transSchema = mongoose.Schema({
     pair: String,
     transactions: [{
       transId:String,
+      placingDate: Date,
       exchange:String,
-      operation:[{
+      operations:[{
+        order_pos: Number,
         side:String,
         price:Number,
         quantity:Number
@@ -15,25 +18,55 @@ var transSchema = mongoose.Schema({
     }]
 });
 
-
 transSchema.static({
-	list: function(callback) {
-		this.find({}, null, {}, callback);
+	list: async function() {
+		return await this.find({}, null, {});
 	}
 });
 
 transSchema.statics.checkSavedOrder = function (priceObject) {
   return new Promise((resolve,reject) =>{
-    this.find({pair: priceObject.symbol}, function(err, result) {
+    this.findOne({pair: priceObject.symbol}, function(err, result) {
         if(err) {
           let reply = "Failed to ad the keyword with following error: " + err;
           resolve(reply)
         } else {
-          console.log("The result of saved tranactions is: " + JSON.stringify(result))
           resolve(result)
         }
   });
   })
+}
+
+transSchema.statics.updateTransaction = function (transId,newArray) {
+  return new Promise((resolve,reject) => {
+      this.findOne({'transactions.transId': transId}, function(err, result) {
+          if(err) {
+            console.log("error updating the database: " + err)
+            resolve(false)
+          } else {
+            result.transactions[0].operations = newArray;
+            result.save(err => {
+              if(err) {
+                console.log("error updating the database");
+              }
+              console.log("database updated...");
+            })
+        }});
+      })
+}
+
+transSchema.statics.updateSequence = async function(object) {
+  let result = await this.findOne({pair:object.pair})
+  if(result !== null) {
+    await this.update({pair:object.pair}, {$push:{transactions: object.transactions[0] }})
+  } else {
+    let saved = await object.save();
+  }
+}
+
+transSchema.statics.getSavedPairs = async function() {
+  let allThings = this.list({});
+  console.log("all things found are: " + JSON.stringify(allThings))
 }
 
 transSchema.statics.addTransaction = function (transaction) {
