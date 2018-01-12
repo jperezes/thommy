@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
 let Promise= require('bluebird')
-var sleep = require('sleep');
+
 //mongoose.set('debug', true);
 
 var transSchema = mongoose.Schema({
