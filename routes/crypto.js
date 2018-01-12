@@ -9,7 +9,7 @@ let cryptoDB = process.env.ORD_DB || 'mongodb://localhost:27017/cryptoDB';
 let con;
 let transModel;
 
-if ((cryptoDB !== null) && false) {
+if ((cryptoDB !== null)) {
   //To avoid promise warning
   mongoose.Promise = global.Promise;
   con = mongoose.createConnection(cryptoDB);
