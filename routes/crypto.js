@@ -330,7 +330,7 @@ async function getPairsFromDB() {
   }
 
 }
-checkLastPriceAndOperate();
+//checkLastPriceAndOperate();
 //saveOrderSequence(orders[1])
 //performOperations(object)
 
