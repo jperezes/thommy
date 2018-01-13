@@ -85,14 +85,13 @@ async function parseOrderCommand(array) {
       symbol: askingPair,
       side: array[array.indexOf("-s") + 1].toUpperCase(),
       type: array[array.indexOf("-t")+1].toUpperCase(),
-      timeInForce:'GTC',
       quantity: parseInt(array[array.indexOf("-q") + 1]),
       timestamp:timestamp
     });
     if(type !== 'MARKET') {
       let askingPrice = await getPriceFromOptions(array,askingPair);
       if (askingPrice < 0) throw new Error("Error price ");
-      Object.assign(data,{price: askingPrice})
+      Object.assign(data,{price: askingPrice,timeInForce:'GTC'})
     }
     return data;
   }catch(e) {
@@ -197,8 +196,8 @@ let placeOrder = async function(array) {
     console.log("validOrder is" + validOrder)
     if (validOrder === true){
       result = await binanceRest.newOrder(data);
-      console.log("result from binance is: " + result)
-      return "success placing the order"
+      console.log("result from binance is: " + JSON.stringify(result))
+      return result
     } else {
       return "price specified is either lower than current price on sell, or higher than current price on buy, aborting ..."
     }
@@ -206,6 +205,10 @@ let placeOrder = async function(array) {
     console.log("error on the order: ", JSON.stringify(e))
     throw e
   }
+}
+
+cryptoModule.prototype.placeOrder = async function(array) {
+  await placeOrder(array);
 }
 
 let saveTransactions = function(){
@@ -316,6 +319,10 @@ let checkLastPriceAndOperate = function() {
       console.log(e);
     }
   })
+}
+
+cryptoModule.prototype.startPriceCheck = function() {
+  checkLastPriceAndOperate();
 }
 async function getPairsFromDB() {
   try {
