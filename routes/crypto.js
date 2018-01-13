@@ -1,5 +1,4 @@
 let rp = require('request-promise');
-let schedule = require('node-schedule');
 const binance = require('node-binance-api');
 const api = require('binance');
 let TransSchema = require('../model/transactions');
@@ -31,7 +30,7 @@ const binanceRest = new api.BinanceRest({
      */
 });
 
-async function checkLastPairPrice(pair) {
+cryptoModule.prototype.checkLastPairPrice = async function(pair) {
   let data = Object.assign({},{symbol:pair})
   try {
     let result = await binanceRest.tickerPrice(data)
@@ -197,7 +196,7 @@ let placeOrder = async function(array) {
     if (validOrder === true){
       result = await binanceRest.newOrder(data);
       console.log("result from binance is: " + JSON.stringify(result))
-      return result
+      return JSON.stringify(result)
     } else {
       return "price specified is either lower than current price on sell, or higher than current price on buy, aborting ..."
     }
@@ -208,7 +207,8 @@ let placeOrder = async function(array) {
 }
 
 cryptoModule.prototype.placeOrder = async function(array) {
-  await placeOrder(array);
+  let result = await placeOrder(array);
+  return JSON.stringify(result)
 }
 
 let saveTransactions = function(){
@@ -264,9 +264,9 @@ let object = {
   price: "0.8323"
 }
 
-async function saveOrderSequence(orderString) {
+cryptoModule.prototype.saveOrderSequence = async function(orderArray) {
   try {
-    let orderArray = orderString.split(" ")
+    //let orderArray = orderString.split(" ")
     let orderObject = await parseOrderSequence(orderArray);
     if(typeof(orderObject.pair) === 'undefined') {
       throw new Error("pair invalid")
@@ -274,6 +274,7 @@ async function saveOrderSequence(orderString) {
     let modelObject = new transModel()
     Object.assign(modelObject,orderObject)
     await transModel.updateSequence(modelObject);
+    return "order saved on the database";
   }catch(e) {
     console.log(e);
   }
@@ -282,7 +283,7 @@ async function saveOrderSequence(orderString) {
 const orders=["-pso -pair trxbtc -s sell -pi 5 -s buy -pd 1 -s sell -pi 10 -s buy -pi 1 -s sell -pi 16 -q 10000",
               "-pso -pair adabtc -s sell -pi 5 -s buy -pd 1 -s sell -pi 6 -s buy -pi 2 -s sell -pi 15 -q 900"]
 
-async function performOperations(pairPrice) {
+cryptoModule.prototype.performOperations = async function(pairPrice,bot) {
   let operation = {}
   try {
     console.log("pair symbol is: " + pairPrice.symbol)
@@ -295,6 +296,7 @@ async function performOperations(pairPrice) {
           console.log("final comand is: -po -pair " + pairPrice.symbol + operation.op);
           let fullOrder = "-po -pair " + pairPrice.symbol + operation.op
           let orderResult = await placeOrder(fullOrder.split(" "))
+          bot.sendMessageToDirectPerson(process.env.MY_MAIL,orderResult)
           await transModel.updateTransaction(result.transactions[i].transId,operation.updatedOp);
           console.log("database updated after perform operation\n")
           console.log("about to send command: " + operation.op)
@@ -324,7 +326,7 @@ let checkLastPriceAndOperate = function() {
 cryptoModule.prototype.startPriceCheck = function() {
   checkLastPriceAndOperate();
 }
-async function getPairsFromDB() {
+cryptoModule.prototype.getPairsFromDB = async function() {
   try {
     let res = await transModel.list({})
     let array=[];

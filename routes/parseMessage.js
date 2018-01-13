@@ -1,6 +1,7 @@
 let bodyParser = require('body-parser');
 let Promise= require('bluebird')
 let CryptoApi = require("./crypto.js");
+let schedule = require('node-schedule');
 const criptoApi = new CryptoApi()
 
 let scope = "";
@@ -49,13 +50,31 @@ dialogModule.prototype.parseQuestion = async function(query,bot){
   } else if(arrayQuest[0] === "-po") {
     reply = await criptoApi.placeOrder(arrayQuest)
     bot.sendMessage(query.roomId,reply);
-  } else if(arrayQuest[0] === "-h") {
+  } else if(arrayQuest[0] === "-pso") {
+    reply = await criptoApi.saveOrderSequence(arrayQuest)
+    bot.sendMessage(query.roomId,reply);
+  }else if(arrayQuest[0] === "-h") {
     reply = showMenu()
     bot.sendRichTextMessage(query.roomId,reply);
   } else {
     bot.sendMessage(query.roomId, "sorry didn't get that typ -h for help");
   }
   return;
+}
+
+dialogModule.prototype.checkLastPriceAndOperate = function(bot) {
+  schedule.scheduleJob('30 * * * * *', async function() {
+    try {
+      let savedPairs = await criptoApi.getPairsFromDB();
+      for (var i = 0, len = savedPairs.length; i < len; i++) {
+        let result = await criptoApi.checkLastPairPrice(savedPairs[i]);
+        let pairAndPrice = Object.assign({},{symbol:savedPairs[i],price:result})
+        await criptoApi.performOperations(pairAndPrice);
+      }
+    } catch(e) {
+      console.log(e);
+    }
+  })
 }
 
 module.exports = dialogModule;
