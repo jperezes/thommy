@@ -45,7 +45,7 @@ async function checkLastPairPrice(pair) {
 async function getPriceFromOptions(array, pair){
   try{
     let lastPrice = await checkLastPairPrice(pair)
-    if (lastPrice < 0 || isNaN(lastPrice)) return "error"
+    if (lastPrice < 0 || isNaN(lastPrice)) throw new Error ("error")
     let askingPrice = 0.0
     let item = "-"
     for (var i = 0, len = array.length; i < len; i++) {
@@ -67,7 +67,7 @@ async function getPriceFromOptions(array, pair){
       }
     }
     console.log("problem option not foud")
-    return "error valid price option not foud"
+    throw new Error ("error valid price option not foud")
   }catch(e) {
     console.log("price calculated: " + e)
     return e
@@ -80,20 +80,23 @@ async function parseOrderCommand(array) {
   let timestamp = new Date().getTime();
   try {
     let askingPair = array[array.indexOf("-pair") + 1].toUpperCase()
-    let askingPrice = await getPriceFromOptions(array,askingPair);
-    if (askingPrice < 0) return "Error price ";
+    let type = array[array.indexOf("-t")+1].toUpperCase();
     let data = Object.assign({},{
       symbol: askingPair,
       side: array[array.indexOf("-s") + 1].toUpperCase(),
       type: array[array.indexOf("-t")+1].toUpperCase(),
       timeInForce:'GTC',
       quantity: parseInt(array[array.indexOf("-q") + 1]),
-      timestamp:timestamp,
-      price: askingPrice
+      timestamp:timestamp
     });
+    if(type !== 'MARKET') {
+      let askingPrice = await getPriceFromOptions(array,askingPair);
+      if (askingPrice < 0) throw new Error("Error price ");
+      Object.assign(data,{price: askingPrice})
+    }
     return data;
   }catch(e) {
-    return e
+    throw e
   }
 }
 
@@ -140,7 +143,7 @@ async function parseOrderSequence(array) {
     console.log("object array is : " + JSON.stringify(objArray))
     return data;
   }catch(e) {
-    return e
+    throw e
   }
 }
 
@@ -183,10 +186,14 @@ cryptoModule.prototype.checkBalance = async function(bot,roomId) {
       bot.sendMessage(roomId,reply,function(){})
 }
 
-cryptoModule.prototype.placeOrder = async function(array) {
+let placeOrder = async function(array) {
   try {
     let data = await parseOrderCommand(array);
-    let validOrder = await validatePrice(data)
+    let validOrder = true;
+    if(data.type === 'LIMIT')
+    {
+      validOrder = await validatePrice(data);
+    }
     console.log("validOrder is" + validOrder)
     if (validOrder === true){
       result = await binanceRest.newOrder(data);
@@ -195,10 +202,9 @@ cryptoModule.prototype.placeOrder = async function(array) {
     } else {
       return "price specified is either lower than current price on sell, or higher than current price on buy, aborting ..."
     }
-
   } catch (e) {
     console.log("error on the order: ", JSON.stringify(e))
-    return "error placing the order " + e
+    throw e
   }
 }
 
@@ -270,8 +276,8 @@ async function saveOrderSequence(orderString) {
   }
 }
 
-const orders=["-pso -pair bnbbtc -s buy -pd 1 -s sell -pi 2 -s buy -pi 1 -s sell -pi 5 -s buy -pi 3 -q 300",
-              "-pso -pair adabtc -s sell -pi 2 -s buy -pd 1 -s sell -pi 6 -s buy -pi 2 -s sell -pi 15 -q 300"]
+const orders=["-pso -pair trxbtc -s sell -pi 5 -s buy -pd 1 -s sell -pi 10 -s buy -pi 1 -s sell -pi 16 -q 10000",
+              "-pso -pair adabtc -s sell -pi 5 -s buy -pd 1 -s sell -pi 6 -s buy -pi 2 -s sell -pi 15 -q 900"]
 
 async function performOperations(pairPrice) {
   let operation = {}
@@ -285,7 +291,7 @@ async function performOperations(pairPrice) {
           console.log("last price is: " + pairPrice.price + " asking price is: " + result.transactions[i].operations[0].price)
           console.log("final comand is: -po -pair " + pairPrice.symbol + operation.op);
           let fullOrder = "-po -pair " + pairPrice.symbol + operation.op
-          let orderResult = await this.placeOrder(fullOrder.split(" "))
+          let orderResult = await placeOrder(fullOrder.split(" "))
           await transModel.updateTransaction(result.transactions[i].transId,operation.updatedOp);
           console.log("database updated after perform operation\n")
           console.log("about to send command: " + operation.op)
@@ -324,7 +330,7 @@ async function getPairsFromDB() {
   }
 
 }
-//checkLastPriceAndOperate();
+checkLastPriceAndOperate();
 //saveOrderSequence(orders[1])
 //performOperations(object)
 
