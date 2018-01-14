@@ -30,7 +30,7 @@ const binanceRest = new api.BinanceRest({
      */
 });
 
-cryptoModule.prototype.checkLastPairPrice = async function(pair) {
+async function checkLastPairPrice(pair) {
   let data = Object.assign({},{symbol:pair})
   try {
     let result = await binanceRest.tickerPrice(data)
