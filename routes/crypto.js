@@ -106,6 +106,7 @@ async function parseOrderSequence(array) {
     let objArray = [{}];
     let j = 0;
     let askingPair = array[array.indexOf("-pair") + 1].toUpperCase()
+    console.log("pair is " + askingPair)
     let lastPrice = await checkLastPairPrice(askingPair)
     let askingQuantity = parseInt(array[array.indexOf("-q") + 1])
     for (let i = 0, len = array.length; i < len; i++) {
