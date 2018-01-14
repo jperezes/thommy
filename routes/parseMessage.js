@@ -45,7 +45,8 @@ dialogModule.prototype.parseQuestion = async function(query,bot){
   let reply ="";
   if (arrayQuest[0] === "-pb"){
       console.log("abou to print the balance")
-      reply = await criptoApi.checkBalance(bot,query.roomId);
+      let exchange = arrayQuest[arrayQuest.indexOf('-e') +  1]
+      reply = await criptoApi.checkBalance(bot,query.roomId,exchange);
       bot.sendMessage(query.roomId,reply)
   } else if(arrayQuest[0] === "-po") {
     reply = await criptoApi.placeOrder(arrayQuest)

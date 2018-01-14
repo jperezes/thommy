@@ -2,6 +2,7 @@ let rp = require('request-promise');
 const binance = require('node-binance-api');
 const api = require('binance');
 let TransSchema = require('../model/transactions');
+let Kraken = require('kraken-api')
 let mongoose = require('mongoose');
 let md5 = require('md5')
 let cryptoDB = process.env.ORD_DB || 'mongodb://localhost:27017/cryptoDB';
@@ -29,6 +30,8 @@ const binanceRest = new api.BinanceRest({
      * default those keys will be replaced with more descriptive, longer ones.
      */
 });
+
+const krakenClient = new Kraken(process.env.K_KEY,process.env.K_SEC)
 
 async function checkLastPairPrice(pair) {
   let data = Object.assign({},{symbol:pair})
@@ -178,18 +181,26 @@ async function validatePrice(data){
   }
 }
 
-cryptoModule.prototype.checkBalance = async function(bot,roomId) {
-      let reply = "My master, your balance is: \n";
-      result = await binanceRest.account();
-      let balances = result.balances;
-      if (typeof(balances !== 'undefined')) {
-        balances.forEach(item => {
-          if(parseFloat(item.free) > 0.001) {
-            reply = reply + item.asset + ": " + item.free + "\n"
-          }
-        })
-      }
-      bot.sendMessage(roomId,reply,function(){})
+cryptoModule.prototype.checkBalance = async function(bot,roomId,exchange) {
+  try{
+    let reply = "My master, your balance in " + exchange + " is: \n";
+    switch(exchange.toLowerCase()) {
+      case "binance":
+        reply = await getBinanceBalance();
+      break;
+      case "kraken":
+        reply = await getKrakenBalance();
+      break;
+      default:
+      reply += "In Kraken: \n" + await getKrakenBalance();
+      reply += "In Binance:\n" + await getBinanceBalance();
+      break;
+    }
+    bot.sendMessage(roomId,reply,function(){})
+
+  } catch (e) {
+
+  }
 }
 
 let placeOrder = async function(array) {
@@ -347,6 +358,46 @@ cryptoModule.prototype.getPairsFromDB = async function() {
   }
 
 }
+
+async function getKrakenBalance(){
+  try {
+    let ret = await krakenClient.api('Balance');
+    let obj = ret.result
+    var reply = "";
+    for (var p in obj) {
+      if( obj.hasOwnProperty(p) ) {
+        if(parseFloat(obj[p]) > 0.0001) {
+          reply += p + ": " + obj[p] + "\n";
+        }
+      }
+    }
+    console.log(reply)
+    return reply;
+  } catch(e) {
+    console.log(e);
+  }
+}
+
+async function getBinanceBalance(){
+  try {
+    result = await binanceRest.account();
+    let balances = result.balances;
+    var reply = "";
+    if (typeof(balances !== 'undefined')) {
+      balances.forEach(item => {
+        if(parseFloat(item.free) > 0.001) {
+          reply = reply + item.asset + ": " + item.free + "\n"
+        }
+      })
+    }
+    console.log(reply)
+    return reply;
+  } catch(e) {
+    console.log(e);
+  }
+}
+
+//getBinanceBalance();
 //checkLastPriceAndOperate();
 //saveOrderSequence(orders[1])
 //performOperations(object)
