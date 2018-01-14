@@ -183,17 +183,17 @@ async function validatePrice(data){
 
 cryptoModule.prototype.checkBalance = async function(bot,roomId,exchange) {
   try{
-    let reply = "My master, your balance in " + exchange + " is: \n";
+    let reply = "My master, your balance in is: \n";
     switch(exchange.toLowerCase()) {
       case "binance":
-        reply = await getBinanceBalance();
+        reply += "In binance: \n\n" + await getBinanceBalance();
       break;
       case "kraken":
-        reply = await getKrakenBalance();
+        reply += "In kraken: \n\n" + await getKrakenBalance();
       break;
       default:
-      reply += "In Kraken: \n" + await getKrakenBalance();
-      reply += "In Binance:\n" + await getBinanceBalance();
+      reply += "In Kraken: \n\n" + await getKrakenBalance();
+      reply += "In Binance:\n\n" + await getBinanceBalance();
       break;
     }
     bot.sendMessage(roomId,reply,function(){})
