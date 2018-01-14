@@ -142,6 +142,7 @@ async function parseOrderSequence(array) {
     console.log("object array is : " + JSON.stringify(objArray))
     return data;
   }catch(e) {
+    console.log("error parsing the message: " + JSON.stringify(e))
     throw e
   }
 }
