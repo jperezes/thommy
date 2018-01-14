@@ -41,6 +41,11 @@ async function checkLastPairPrice(pair) {
   }
 }
 
+cryptoModule.prototype.checkLastPairPrice = async function(pair) {
+  let result = await checkLastPairPrice(pair)
+  return result;
+}
+
 async function getPriceFromOptions(array, pair){
   try{
     let lastPrice = await checkLastPairPrice(pair)
