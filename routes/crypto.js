@@ -87,6 +87,7 @@ cryptoModule.prototype.checkLastPairPrice = async function(pair,exchange) {
 
 async function getPriceFromOptions(array, pair,exchange){
   try{
+    console.log("about to check last price pair in get price from options")
     let lastPrice = await checkLastPairPrice(pair,exchange)
     if (lastPrice < 0 || isNaN(lastPrice)) throw new Error ("error")
     let askingPrice = 0.0
@@ -122,6 +123,7 @@ async function parseOrderCommandBinance(array) {
   let timestamp = new Date().getTime();
   try {
     let askingPair = array[array.indexOf("-pair") + 1].toUpperCase()
+    console.log("asking pair is : " + askingPair)
     let type = array[array.indexOf("-t")+1].toUpperCase();
     let data = Object.assign({},{
       symbol: askingPair,
@@ -131,7 +133,7 @@ async function parseOrderCommandBinance(array) {
       timestamp:timestamp
     });
     if(type !== 'MARKET') {
-      let askingPrice = await getPriceFromOptions(array,askingPair);
+      let askingPrice = await getPriceFromOptions(array,askingPair,exchange);
       if (askingPrice < 0) throw new Error("Error price ");
       Object.assign(data,{price: askingPrice,timeInForce:'GTC'})
     }
@@ -156,7 +158,7 @@ async function parseOrderCommandKraken(array) {
       volume: parseInt(array[array.indexOf("-q") + 1])
     });
     if(type !== 'MARKET') {
-      let askingPrice = await getPriceFromOptions(array,askingPair);
+      let askingPrice = await getPriceFromOptions(array,askingPair,exchange);
       if (askingPrice < 0) throw new Error("Error price ");
       Object.assign(data,{price: askingPrice})
     }
