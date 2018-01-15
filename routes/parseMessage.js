@@ -64,6 +64,8 @@ dialogModule.prototype.parseQuestion = async function(query,bot){
 }
 
 dialogModule.prototype.checkLastPriceAndOperate = function(bot) {
+  var rule = new schedule.RecurrenceRule();
+  rule.second = [0, 20, 40];
   schedule.scheduleJob('30 * * * * *', async function() {
     try {
       let savedPairs = await criptoApi.getPairsFromDB();
