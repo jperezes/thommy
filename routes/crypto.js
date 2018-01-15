@@ -33,7 +33,7 @@ const binanceRest = new api.BinanceRest({
 
 const krakenClient = new Kraken(process.env.K_KEY,process.env.K_SEC)
 
-async function checkLastPairPrice(pair) {
+async function checkBinanceLastPairPrice(pair) {
   let data = Object.assign({},{symbol:pair})
   try {
     let result = await binanceRest.tickerPrice(data)
@@ -44,14 +44,50 @@ async function checkLastPairPrice(pair) {
   }
 }
 
-cryptoModule.prototype.checkLastPairPrice = async function(pair) {
-  let result = await checkLastPairPrice(pair)
+async function checkKrakenLastPairPrice(askingPair) {
+  try {
+    res = await krakenClient.api('Ticker', { pair : askingPair })
+    var obj = res.result;
+    var reply = "";
+    for (var p in obj) {
+      if( obj.hasOwnProperty(p) ) {
+        reply = obj[p].c[0];
+        break;
+      }
+    }
+    console.log(reply)
+    return parseFloat(reply);
+  } catch (e) {
+    console.log(e)
+  }
+}
+
+async function checkLastPairPrice(pair,exchange) {
+  try {
+    switch (exchange){
+      case "binance":
+        return await checkBinanceLastPairPrice(pair);
+        break;
+      case "kraken":
+        return await checkKrakenLastPairPrice(pair);
+        break;
+      default:
+        throw new Error ("no valid exchange")
+        break;
+    }
+  } catch (e) {
+    throw e
+  }
+}
+
+cryptoModule.prototype.checkLastPairPrice = async function(pair,exchange) {
+  let result = await checkLastPairPrice(pair,exchange)
   return result;
 }
 
-async function getPriceFromOptions(array, pair){
+async function getPriceFromOptions(array, pair,exchange){
   try{
-    let lastPrice = await checkLastPairPrice(pair)
+    let lastPrice = await checkLastPairPrice(pair,exchange)
     if (lastPrice < 0 || isNaN(lastPrice)) throw new Error ("error")
     let askingPrice = 0.0
     let item = "-"
@@ -62,7 +98,6 @@ async function getPriceFromOptions(array, pair){
           return parseFloat(array[array.indexOf(item) + 1]);
         case "-pi":
           let increment = (parseFloat(array[array.indexOf(item) + 1]) / 100)
-          console.log("increment, final price: " + increment)
           askingPrice = ((1 + increment) * lastPrice).toFixed(10);
           return parseFloat(askingPrice)
         case "-pd":
@@ -81,7 +116,7 @@ async function getPriceFromOptions(array, pair){
   }
 }
 
-async function parseOrderCommand(array) {
+async function parseOrderCommandBinance(array) {
   // remove first element of the array as it is -po
   array[0] = ""
   let timestamp = new Date().getTime();
@@ -106,6 +141,32 @@ async function parseOrderCommand(array) {
   }
 }
 
+
+async function parseOrderCommandKraken(array) {
+  // remove first element of the array as it is -po
+  array[0] = ""
+  let timestamp = new Date().getTime();
+  try {
+    let askingPair = array[array.indexOf("-pair") + 1].toUpperCase()
+    let orderType = array[array.indexOf("-t")+1].toUpperCase();
+    let data = Object.assign({},{
+      pair: askingPair,
+      type: array[array.indexOf("-s") + 1].toUpperCase(),
+      ordertype: orderType,
+      volume: parseInt(array[array.indexOf("-q") + 1])
+    });
+    if(type !== 'MARKET') {
+      let askingPrice = await getPriceFromOptions(array,askingPair);
+      if (askingPrice < 0) throw new Error("Error price ");
+      Object.assign(data,{price: askingPrice})
+    }
+    return data;
+  }catch(e) {
+    throw e
+  }
+}
+
+
 async function parseOrderSequence(array) {
   // remove first element of the array as it is -po
   let sequence = new transModel();
@@ -114,8 +175,9 @@ async function parseOrderSequence(array) {
     let objArray = [{}];
     let j = 0;
     let askingPair = array[array.indexOf("-pair") + 1].toUpperCase()
+    let exchange = array[array.indexOf("-e") + 1].toLowerCase()
     console.log("pair is " + askingPair)
-    let lastPrice = await checkLastPairPrice(askingPair)
+    let lastPrice = await checkLastPairPrice(askingPair, exchange)
     console.log("Last price is " + lastPrice)
     let askingQuantity = parseInt(array[array.indexOf("-q") + 1])
     for (let i = 0, len = array.length; i < len; i++) {
@@ -144,7 +206,7 @@ async function parseOrderSequence(array) {
       transactions: {
       transId: md5("toek" + dateSubmission),
       placingDate: dateSubmission,
-      exchange:'Binance',
+      exchange: exchange,
       operations: objArray
     }
     });
@@ -156,10 +218,10 @@ async function parseOrderSequence(array) {
   }
 }
 
-async function validatePrice(data){
+async function validatePrice(data, exchange){
   try{
     console.log("object 2  is: " + JSON.stringify(data))
-    let lastPrice = await checkLastPairPrice(data.symbol);
+    let lastPrice = await checkLastPairPrice(data.symbol, exchange);
     console.log("requested price is: " + data.price + " last price is: " + lastPrice)
     if(data.side === 'SELL') {
       if(lastPrice > data.price) {
@@ -203,17 +265,29 @@ cryptoModule.prototype.checkBalance = async function(bot,roomId,exchange) {
   }
 }
 
-let placeOrder = async function(array) {
+let placeOrder = async function(array,exchange) {
   try {
-    let data = await parseOrderCommand(array);
+    let data;
     let validOrder = true;
     if(data.type === 'LIMIT')
     {
-      validOrder = await validatePrice(data);
+      validOrder = await validatePrice(data,exchange);
     }
     console.log("validOrder is" + validOrder)
     if (validOrder === true){
-      result = await binanceRest.newOrder(data);
+      switch(exchange) {
+        case "binance":
+          data = await parseOrderCommandBinance(array);
+          result = await binanceRest.newOrder(data);
+          break;
+        case "kraken":
+          data = await parseOrderCommandBinance(array);
+          result = await krakenClient.api('addOrder',data);
+          break;
+        default:
+        break;
+      }
+
       console.log("result from binance is: " + JSON.stringify(result))
       return JSON.stringify(result)
     } else {
@@ -311,10 +385,11 @@ cryptoModule.prototype.performOperations = async function(pairPrice,bot) {
       for (let i = 0, len = result.transactions.length; i < len; i++) {
         operation = checkOperations(result.transactions[i].operations,parseFloat(pairPrice.price))
         if(operation !== null) {
+          console.log("last price is: " + pairPrice.price + " asking price is: " + result.transactions[i].operations[0].price + " - exchange is: " + result.transactions[i].exchange )
           console.log("last price is: " + pairPrice.price + " asking price is: " + result.transactions[i].operations[0].price)
           console.log("final comand is: -po -pair " + pairPrice.symbol + operation.op);
-          let fullOrder = "-po -pair " + pairPrice.symbol + operation.op
-          let orderResult = await placeOrder(fullOrder.split(" "))
+          let fullOrder = "-po -pair " + pairPrice.symbol + operation.op + " -e " + result.transactions[i].exchange
+          let orderResult = await placeOrder(fullOrder.split(" "),result.transactions[i].exchange)
           bot.sendMessageToDirectPerson(process.env.MY_MAIL,orderResult)
           await transModel.updateTransaction(result.transactions[i].transId,operation.updatedOp);
           console.log("database updated after perform operation\n")
@@ -349,8 +424,10 @@ cryptoModule.prototype.getPairsFromDB = async function() {
   try {
     let res = await transModel.list({})
     let array=[];
+    let obj={}
     res.forEach(item => {
-      array.push(item.pair);
+      obj = Object.assign({},{pair:item.pair,exchange:item.transactions[0].exchange})
+      array.push(obj);
     })
     return array;
   } catch(e) {
@@ -395,6 +472,21 @@ async function getBinanceBalance(){
   } catch(e) {
     console.log(e);
   }
+}
+
+checkLastPriceAndOperate = function() {
+  schedule.scheduleJob('30 * * * * *', async function() {
+    try {
+      let savedPairs = await criptoApi.getPairsFromDB();
+      for (var i = 0, len = savedPairs.length; i < len; i++) {
+        let result = await criptoApi.checkLastPairPrice(savedPairs[i]);
+        let pairAndPrice = Object.assign({},{symbol:savedPairs[i],price:result})
+        await criptoApi.performOperations(pairAndPrice);
+      }
+    } catch(e) {
+      console.log(e);
+    }
+  })
 }
 
 //getBinanceBalance();

@@ -68,8 +68,8 @@ dialogModule.prototype.checkLastPriceAndOperate = function(bot) {
     try {
       let savedPairs = await criptoApi.getPairsFromDB();
       for (var i = 0, len = savedPairs.length; i < len; i++) {
-        let result = await criptoApi.checkLastPairPrice(savedPairs[i]);
-        let pairAndPrice = Object.assign({},{symbol:savedPairs[i],price:result})
+        let result = await criptoApi.checkLastPairPrice(savedPairs[i].pair,savedPairs[i].exchange.toLowerCase());
+        let pairAndPrice = Object.assign({},{symbol:savedPairs[i].pair,price:result})
         await criptoApi.performOperations(pairAndPrice,bot);
       }
     } catch(e) {

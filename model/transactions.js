@@ -28,7 +28,7 @@ transSchema.statics.checkSavedOrder = function (priceObject) {
   return new Promise((resolve,reject) =>{
     this.findOne({pair: priceObject.symbol}, function(err, result) {
         if(err) {
-          let reply = "Failed to ad the keyword with following error: " + err;
+          let reply = "Failed retrieve the price of the object: " + err;
           resolve(reply)
         } else {
           resolve(result)
