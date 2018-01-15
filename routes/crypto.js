@@ -270,6 +270,7 @@ let placeOrder = async function(array) {
     let data;
     let validOrder = true;
     let exchange = array[array.indexOf("-e") + 1]
+    console.log("exchange is: " + exchange)
     if(data.type === 'LIMIT')
     {
       validOrder = await validatePrice(data,exchange);
@@ -390,7 +391,7 @@ cryptoModule.prototype.performOperations = async function(pairPrice,bot) {
           console.log("last price is: " + pairPrice.price + " asking price is: " + result.transactions[i].operations[0].price)
           console.log("final comand is: -po -pair " + pairPrice.symbol + operation.op);
           let fullOrder = "-po -pair " + pairPrice.symbol + operation.op + " -e " + result.transactions[i].exchange
-          let orderResult = await placeOrder(fullOrder.split(" "),result.transactions[i].exchange)
+          let orderResult = await placeOrder(fullOrder.split(" "))
           bot.sendMessageToDirectPerson(process.env.MY_MAIL,orderResult)
           await transModel.updateTransaction(result.transactions[i].transId,operation.updatedOp);
           console.log("database updated after perform operation\n")
