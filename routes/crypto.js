@@ -275,6 +275,7 @@ let placeOrder = async function(array) {
     console.log("exchange is: " + exchange)
     if(exchange === 'binance'){
       data = await parseOrderCommandBinance(array);
+      console.log("this is the data from the parser: " + JSON.stringify(data))
       if(data.type === 'LIMIT')
       {
         console.log("about to valiate price")
