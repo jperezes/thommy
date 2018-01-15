@@ -277,13 +277,15 @@ let placeOrder = async function(array) {
     if(exchange === 'binance'){
       data = await parseOrderCommandBinance(array);
       console.log("this is the data from the parser: " + JSON.stringify(data))
-      if(typeof(data) !== 'undefined' && data.type === 'LIMIT')
+      if (typeof(data) === 'undefined') throw new Error ("error parsing the command on binance");
+      if(data.type === 'LIMIT')
       {
         console.log("about to valiate price")
         validOrder = await validatePrice(data,exchange);
       }
     } else if (exchange === 'kraken') {
       data = await parseOrderCommandKraken(array);
+      if (typeof(data) === 'undefined') throw new Error ("error parsing the command on binance");
       if(data.ordertype === 'LIMIT')
       {
         console.log("about to valiate price")
