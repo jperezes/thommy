@@ -157,7 +157,7 @@ async function parseOrderCommandKraken(array) {
       ordertype: orderType,
       volume: parseInt(array[array.indexOf("-q") + 1])
     });
-    if(type !== 'MARKET') {
+    if(orderType !== 'MARKET') {
       let askingPrice = await getPriceFromOptions(array,askingPair,exchange);
       if (askingPrice < 0) throw new Error("Error price ");
       Object.assign(data,{price: askingPrice})
