@@ -280,10 +280,12 @@ let placeOrder = async function(array) {
       switch(exchange) {
         case "binance":
           data = await parseOrderCommandBinance(array);
+          console.log("json to send to binance: " + JSON.stringify(data))
           result = await binanceRest.newOrder(data);
           break;
         case "kraken":
-          data = await parseOrderCommandBinance(array);
+          data = await parseOrderCommandKraken(array);
+          console.log("json to send to kraken: " + JSON.stringify(data))
           result = await krakenClient.api('addOrder',data);
           break;
         default:
