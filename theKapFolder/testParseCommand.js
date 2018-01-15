@@ -44,6 +44,9 @@ dialogModule.prototype.parseQuestion = async function(query,bot){
   }else if(arrayQuest[0] === "-h") {
     reply = showMenu()
     bot.sendRichTextMessage(query.roomId,reply);
+  }else if(arrayQuest[0] === "-dp") {
+    reply = await criptoApi.deletePair(arrayQuest[1])
+    bot.sendMessage(query.roomId,reply);
   } else {
     bot.sendMessage(query.roomId, "sorry didn't get that typ -h for help");
   }
