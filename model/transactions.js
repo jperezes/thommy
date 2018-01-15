@@ -64,6 +64,15 @@ transSchema.statics.updateSequence = async function(object) {
   }
 }
 
+transSchema.statics.deletePair = async function(pair_to_delete) {
+  try {
+    let result = await this.remove({pair:pair_to_delete});
+    return result
+  }catch(e) {
+    throw new Error ("error removing the document: " + e)
+  }
+}
+
 transSchema.statics.getSavedPairs = async function() {
   let allThings = this.list({});
   console.log("all things found are: " + JSON.stringify(allThings))
