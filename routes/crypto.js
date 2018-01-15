@@ -301,7 +301,7 @@ let placeOrder = async function(array) {
           break;
         case "kraken":
           console.log("json to send to kraken: " + JSON.stringify(data))
-          result = await krakenClient.api('addOrder',data);
+          result = await krakenClient.api('AddOrder',data);
           break;
         default:
         break;
