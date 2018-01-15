@@ -32,6 +32,6 @@ let bot = function(result){
   console.log(result);
 }
 
-dialogModule.checkLastPriceAndOperate(bot)
+dialogModule.checkLastPriceAndOperate(sparkBot)
 //testApi.listenForStadistics(sparkBot, sparkBot.getServer());
 //checkCurrency.scheduleServer(bot);
