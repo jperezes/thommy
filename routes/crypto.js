@@ -273,9 +273,10 @@ let placeOrder = async function(array) {
     console.log("exchange is: " + exchange)
     if(data.type === 'LIMIT')
     {
+      console.log("about to valiate price")
       validOrder = await validatePrice(data,exchange);
     }
-    console.log("validOrder is" + validOrder)
+    console.log("validOrder is " + validOrder)
     if (validOrder === true){
       switch(exchange) {
         case "binance":
