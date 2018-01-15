@@ -153,8 +153,8 @@ async function parseOrderCommandKraken(array) {
     let orderType = array[array.indexOf("-t")+1].toUpperCase();
     let data = Object.assign({},{
       pair: askingPair,
-      type: array[array.indexOf("-s") + 1].toUpperCase(),
-      ordertype: orderType,
+      type: array[array.indexOf("-s") + 1].toLowerCase(),
+      ordertype: orderType.toLowerCase(),
       volume: parseInt(array[array.indexOf("-q") + 1])
     });
     if(orderType !== 'MARKET') {
