@@ -99,11 +99,11 @@ async function getPriceFromOptions(array, pair,exchange){
           return parseFloat(array[array.indexOf(item) + 1]);
         case "-pi":
           let increment = (parseFloat(array[array.indexOf(item) + 1]) / 100)
-          askingPrice = ((1 + increment) * lastPrice).toFixed(10);
+          askingPrice = ((1 + increment) * lastPrice).toFixed(6);
           return parseFloat(askingPrice)
         case "-pd":
           let decrement = parseFloat(array[array.indexOf(item) + 1]) / 100;
-          askingPrice = ((1 - decrement) * lastPrice).toFixed(10);
+          askingPrice = ((1 - decrement) * lastPrice).toFixed(6);
           return parseFloat(askingPrice)
         default:
           break;
@@ -204,11 +204,11 @@ async function parseOrderSequence(array) {
         tempObj = Object.assign({},{side : array[i + 1].toUpperCase(),quantity:askingQuantity})
         if(array[i+2] == "-pi"){
           let increment = (parseFloat(array[i + 3]) / 100)
-          let askingPrice = ((1 + increment) * lastPrice).toFixed(10);
+          let askingPrice = ((1 + increment) * lastPrice).toFixed(6);
           tempObj = Object.assign(tempObj,{price : parseFloat(askingPrice)})
         } else if (array[i+2] == "-pd") {
           let decrement = (parseFloat(array[i + 3]) / 100)
-          let askingPrice = ((1 - decrement) * lastPrice).toFixed(10);
+          let askingPrice = ((1 - decrement) * lastPrice).toFixed(6);
           tempObj = Object.assign(tempObj,{price : parseFloat(askingPrice)})
         } else {
           return "error";
