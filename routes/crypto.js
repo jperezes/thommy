@@ -117,6 +117,21 @@ async function getPriceFromOptions(array, pair,exchange){
   }
 }
 
+cryptoModule.prototype.deletePair = async function(pair) {
+  try {
+    console.log("about to delete pair: " + pair)
+    let res = await transModel.deletePair(pair.toUpperCase())
+    if(res.result.n > 0){
+      return "pair deleted ..."
+    } else {
+      return "pair probably NOT deleted";
+    }
+  } catch(e) {
+    console.log(e);
+    return e
+  }
+}
+
 async function parseOrderCommandBinance(array) {
   // remove first element of the array as it is -po
   array[0] = ""
