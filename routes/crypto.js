@@ -273,21 +273,29 @@ let placeOrder = async function(array) {
     let validOrder = true;
     let exchange = array[array.indexOf("-e") + 1]
     console.log("exchange is: " + exchange)
-    if(data.type === 'LIMIT')
-    {
-      console.log("about to valiate price")
-      validOrder = await validatePrice(data,exchange);
+    if(exchange === 'binance'){
+      data = await parseOrderCommandBinance(array);
+      if(data.type === 'LIMIT')
+      {
+        console.log("about to valiate price")
+        validOrder = await validatePrice(data,exchange);
+      }
+    } else if (exchange === 'kraken') {
+      data = await parseOrderCommandKraken(array);
+      if(data.ordertype === 'LIMIT')
+      {
+        console.log("about to valiate price")
+        validOrder = await validatePrice(data,exchange);
+      }
     }
     console.log("validOrder is " + validOrder)
     if (validOrder === true){
       switch(exchange) {
         case "binance":
-          data = await parseOrderCommandBinance(array);
           console.log("json to send to binance: " + JSON.stringify(data))
           result = await binanceRest.newOrder(data);
           break;
         case "kraken":
-          data = await parseOrderCommandKraken(array);
           console.log("json to send to kraken: " + JSON.stringify(data))
           result = await krakenClient.api('addOrder',data);
           break;
