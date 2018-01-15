@@ -133,7 +133,7 @@ async function parseOrderCommandBinance(array) {
       timestamp:timestamp
     });
     if(type !== 'MARKET') {
-      let askingPrice = await getPriceFromOptions(array,askingPair,exchange);
+      let askingPrice = await getPriceFromOptions(array,askingPair,'binance');
       if (askingPrice < 0) throw new Error("Error price ");
       Object.assign(data,{price: askingPrice,timeInForce:'GTC'})
     }
@@ -158,7 +158,7 @@ async function parseOrderCommandKraken(array) {
       volume: parseInt(array[array.indexOf("-q") + 1])
     });
     if(orderType !== 'MARKET') {
-      let askingPrice = await getPriceFromOptions(array,askingPair,exchange);
+      let askingPrice = await getPriceFromOptions(array,askingPair,'kraken');
       if (askingPrice < 0) throw new Error("Error price ");
       Object.assign(data,{price: askingPrice})
     }
