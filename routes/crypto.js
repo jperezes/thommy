@@ -265,10 +265,11 @@ cryptoModule.prototype.checkBalance = async function(bot,roomId,exchange) {
   }
 }
 
-let placeOrder = async function(array,exchange) {
+let placeOrder = async function(array) {
   try {
     let data;
     let validOrder = true;
+    let exchange = array[array.indexOf("-e") + 1]
     if(data.type === 'LIMIT')
     {
       validOrder = await validatePrice(data,exchange);
