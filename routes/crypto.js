@@ -390,7 +390,7 @@ cryptoModule.prototype.performOperations = async function(pairPrice,bot) {
           console.log("last price is: " + pairPrice.price + " asking price is: " + result.transactions[i].operations[0].price + " - exchange is: " + result.transactions[i].exchange )
           console.log("last price is: " + pairPrice.price + " asking price is: " + result.transactions[i].operations[0].price)
           console.log("final comand is: -po -pair " + pairPrice.symbol + operation.op + " -e " + result.transactions[i].exchange);
-          let fullOrder = "-po -pair " + pairPrice.symbol + operation.op + " -e " + result.transactions[i].exchange
+          let fullOrder = "-po -pair " + pairPrice.symbol + operation.op + " -e " + result.transactions[i].exchange.toLowerCase()
           let orderResult = await placeOrder(fullOrder.split(" "))
           bot.sendMessageToDirectPerson(process.env.MY_MAIL,orderResult)
           await transModel.updateTransaction(result.transactions[i].transId,operation.updatedOp);
