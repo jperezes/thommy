@@ -162,6 +162,7 @@ async function parseOrderCommandKraken(array) {
       if (askingPrice < 0) throw new Error("Error price ");
       Object.assign(data,{price: askingPrice})
     }
+    console.log("data to send to kraken: " + JSON.stringify(data));
     return data;
   }catch(e) {
     throw e
