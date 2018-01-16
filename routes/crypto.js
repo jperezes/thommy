@@ -418,7 +418,7 @@ cryptoModule.prototype.saveSpecifiedPriceSequence = async function(orderArray) {
     for (let i = 0, len = orderArray.length; i < len; i++) {
       let tempObj =  {}
       if(orderArray[i] === "-s") {
-        tempObj = Object.assign({},{side : orderArray[i + 1].toLowerCase(),quantity:askingQuantity})
+        tempObj = Object.assign({},{side : orderArray[i + 1].toUpperCase(),quantity:askingQuantity})
         if(orderArray[i+2] === "-p"){
           let askingPrice = parseFloat(orderArray[i + 3]).toFixed(6);
           tempObj = Object.assign(tempObj,{price : askingPrice})
