@@ -54,6 +54,9 @@ dialogModule.prototype.parseQuestion = async function(query,bot){
   } else if(arrayQuest[0] === "-pso") {
     reply = await criptoApi.saveOrderSequence(arrayQuest)
     bot.sendMessage(query.roomId,reply);
+  }else if(arrayQuest[0] === "-fpos") {
+    reply = await criptoApi.saveSpecifiedPriceSequence(arrayQuest)
+    bot.sendMessage(query.roomId,reply);
   }else if(arrayQuest[0] === "-dp") {
     reply = await criptoApi.deletePair(arrayQuest[1])
     bot.sendMessage(query.roomId,reply);

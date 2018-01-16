@@ -407,6 +407,48 @@ cryptoModule.prototype.saveOrderSequence = async function(orderArray) {
   }
 }
 
+cryptoModule.prototype.saveSpecifiedPriceSequence = async function(orderArray) {
+  try {
+    //let orderArray = orderString.split(" ")
+    let askingPair = orderArray[orderArray.indexOf("-pair") +1]
+    let askingQuantity = parseFloat(orderArray[orderArray.indexOf("-q") +1])
+    let exchange = parseFloat(orderArray[orderArray.indexOf("-e") +1])
+    let objArray=[{}]
+    let j = 0;
+    for (let i = 0, len = orderArray.length; i < len; i++) {
+      let tempObj =  {}
+      if(orderArray[i] === "-s") {
+        tempObj = Object.assign({},{side : orderArray[i + 1].toLowerCase(),quantity:askingQuantity})
+        if(orderArray[i+2] === "-p"){
+          let askingPrice = parseFloat(orderArray[i + 3]).toFixed(6);
+          tempObj = Object.assign(tempObj,{price : askingPrice})
+        } else {
+          throw new Error ("no valid price tag: " + orderArray[i+2]);
+        }
+        tempObj = Object.assign(tempObj,{order_pos : j})
+        objArray[j]=tempObj;
+        j=j+1;
+      }
+    }
+    let dateSubmission = new Date().getTime();
+    let data = Object.assign({},{
+      pair: askingPair,
+      transactions: {
+      transId: md5("toek" + dateSubmission),
+      placingDate: dateSubmission,
+      exchange: exchange,
+      operations: objArray
+    }
+    });
+    let modelObject = new transModel()
+    Object.assign(modelObject,data)
+    await transModel.updateSequence(modelObject);
+    return "order saved on the database";
+  } catch(e) {
+    console.log(e);
+  }
+}
+
 const orders=["-pso -pair trxbtc -s sell -pi 5 -s buy -pd 1 -s sell -pi 10 -s buy -pi 1 -s sell -pi 16 -q 10000",
               "-pso -pair adabtc -s sell -pi 5 -s buy -pd 1 -s sell -pi 6 -s buy -pi 2 -s sell -pi 15 -q 900"]
 
