@@ -412,7 +412,7 @@ cryptoModule.prototype.saveSpecifiedPriceSequence = async function(orderArray) {
     //let orderArray = orderString.split(" ")
     let askingPair = orderArray[orderArray.indexOf("-pair") +1]
     let askingQuantity = parseFloat(orderArray[orderArray.indexOf("-q") +1])
-    let exchange = parseFloat(orderArray[orderArray.indexOf("-e") +1])
+    let exchange = orderArray[orderArray.indexOf("-e") +1]
     let objArray=[{}]
     let j = 0;
     for (let i = 0, len = orderArray.length; i < len; i++) {
