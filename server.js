@@ -7,7 +7,7 @@ let sparkBot = new SparkBot(process.env.TOMY_KEY, port, botdomain);
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0
 //
 const dialogModule = new DialogModule()
-sparkBot.sparkBotEmitter.on('message', function(event){
+sparkBot.on('message', function(event){
   console.log('I have received an event!!!')
    var mail = event.personEmail;
    console.log("message received + :" + JSON.stringify(event))
@@ -19,11 +19,11 @@ sparkBot.sparkBotEmitter.on('message', function(event){
   console.log(JSON.stringify(event));
 });
 
-sparkBot.sparkBotEmitter.on('rooms', function(event){
+sparkBot.on('rooms', function(event){
     console.log(JSON.stringify(event));
 });
 
-sparkBot.sparkBotEmitter.on('memberships', function (event){
+sparkBot.on('memberships', function (event){
     console.log(JSON.stringify(event));
  });
 
@@ -32,6 +32,6 @@ let bot = function(result){
   console.log(result);
 }
 
-dialogModule.checkLastPriceAndOperate(sparkBot)
+//dialogModule.checkLastPriceAndOperate(sparkBot)
 //testApi.listenForStadistics(sparkBot, sparkBot.getServer());
 //checkCurrency.scheduleServer(bot);
