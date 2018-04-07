@@ -2,7 +2,7 @@ let express = require('express')
 let router = express.Router();
 const bodyParser = require("body-parser");
 let rp = require('request-promise');
-const EventEmitter = require('events');
+const EventEmitter = require('events').EventEmitter;
 class SparkBotEmitter extends EventEmitter {}
 
 // Default options
@@ -28,6 +28,13 @@ const sendRequest = async (data, parentMethod) => {
   }
 };
 
+const parseDomain = function(domain) {
+  if(domain.indexOf('http://') === -1 && domain.indexOf('https://') === -1) {
+    return "http://" + domain
+  }
+  return domain
+}
+
 /**
  * SparkBotApi register the bot to Cisco Spark Api
  * @param {String}        token          Bot token Key
@@ -38,20 +45,16 @@ const sendRequest = async (data, parentMethod) => {
 class SparkBotApi {
 	constructor(token, port, botdomain,webhookPort) {
     Object.assign(defaults.headers,{'Authorization': 'Bearer ' + token})
-		this.config = Object.assign({port, parseDomain(botdomain)}, defaults);
+    let domain = parseDomain(botdomain)
+		this.config = Object.assign({port, domain}, defaults);
     this.sparkBotEmitter = new SparkBotEmitter();
-    this.sparkBotEmitter.call(this);
+    this.on = this.sparkBotEmitter.on
     this.app = express()
     this.initServer(this.app);
     this.initializeWeebHooks();
 	}
 
-  let parseDomain = domain => {
-    if(domain.indexOf('http://') === -1 || domain.indexOf('https://') === -1) {
-      return "http://" + domain
-    }
-    return domain
-  }
+
   /**
    * This method register the webhook for all events on the Spark Api
    */
