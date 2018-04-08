@@ -223,7 +223,7 @@ class SparkBotApi {
             const personDetails = await this.readPersonDetails(personId);
             message.message = txt
             message.person = personDetails
-            this.emit('message',message)
+            this.sparkBotEmitter.emit('message',message)
           }
           return "Webhook received"
       }
