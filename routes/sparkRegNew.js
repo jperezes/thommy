@@ -3,7 +3,7 @@ let router = express.Router();
 const bodyParser = require("body-parser");
 let rp = require('request-promise');
 const EventEmitter = require('events').EventEmitter;
-class SparkBotEmitter extends EventEmitter {}
+//class SparkBotEmitter extends EventEmitter {}
 
 // Default options
 const defaults = {
@@ -47,7 +47,7 @@ class SparkBotApi {
     Object.assign(defaults.headers,{'Authorization': 'Bearer ' + token})
     let domain = parseDomain(botdomain)
 		this.config = Object.assign({port, domain}, defaults);
-    this.sparkBotEmitter = new SparkBotEmitter();
+    this.sparkBotEmitter = new EventEmitter();
     //this.on = this.sparkBotEmitter.on
     //eventEmitter.call(this)
     this.app = express()
