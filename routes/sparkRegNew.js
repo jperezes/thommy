@@ -2,8 +2,8 @@ let express = require('express')
 let router = express.Router();
 const bodyParser = require("body-parser");
 let rp = require('request-promise');
-const EventEmitter = require('events').EventEmitter;
-//class SparkBotEmitter extends EventEmitter {}
+const EventEmitter = require('events');
+class SparkBotEmitter extends EventEmitter {}
 
 // Default options
 const defaults = {
@@ -48,15 +48,13 @@ class SparkBotApi {
     let domain = parseDomain(botdomain)
 		this.config = Object.assign({port, domain}, defaults);
     this.sparkBotEmitter = new EventEmitter();
-    //this.on = this.sparkBotEmitter.on
-    //eventEmitter.call(this)
     this.app = express()
     this.initServer(this.app);
     this.initializeWeebHooks();
 	}
 
-  on(event, callback) {
-    this.sparkBotEmitter.on(event,callback)
+  on(eventName, callback) {
+    this.sparkBotEmitter.on(eventName,callback)
   }
 
   /**
