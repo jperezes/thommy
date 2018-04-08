@@ -2,7 +2,7 @@ let express = require('express')
 let router = express.Router();
 const bodyParser = require("body-parser");
 let rp = require('request-promise');
-const EventEmitter = require('events').EventEmitter;
+const EventEmitter = require('events');
 class SparkBotEmitter extends EventEmitter {}
 
 // Default options
@@ -48,12 +48,16 @@ class SparkBotApi {
     let domain = parseDomain(botdomain)
 		this.config = Object.assign({port, domain}, defaults);
     this.sparkBotEmitter = new SparkBotEmitter();
-    this.on = this.sparkBotEmitter.on
+    //this.on = this.sparkBotEmitter.on
+    //eventEmitter.call(this)
     this.app = express()
     this.initServer(this.app);
     this.initializeWeebHooks();
 	}
 
+  on(event, callback) {
+    this.sparkBotEmitter.on(event,callback)
+  }
 
   /**
    * This method register the webhook for all events on the Spark Api
@@ -219,7 +223,7 @@ class SparkBotApi {
             const personDetails = await this.readPersonDetails(personId);
             message.message = txt
             message.person = personDetails
-            this.sparkBotEmitter.emit('message',message)
+            this.emit('message',message)
           }
           return "Webhook received"
       }
