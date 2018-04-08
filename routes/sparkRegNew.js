@@ -2,7 +2,7 @@ let express = require('express')
 let router = express.Router();
 const bodyParser = require("body-parser");
 let rp = require('request-promise');
-const EventEmitter = require('events');
+const EventEmitter = require('events').EventEmitter;
 class SparkBotEmitter extends EventEmitter {}
 
 // Default options
