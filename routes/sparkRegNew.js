@@ -45,7 +45,6 @@ const sendRequest = async (data, parentMethod) => {
 class SparkBotApi {
 	constructor(token, port, botdomain,webhookPort) {
     Object.assign(defaults.headers,{'Authorization': 'Bearer ' + token})
-    let domain = parseDomain(botdomain)
 		this.config = Object.assign({port, domain}, defaults);
     this.sparkBotEmitter = new SparkBotEmitter();
     this.on = this.sparkBotEmitter.on
@@ -54,12 +53,6 @@ class SparkBotApi {
     this.initializeWeebHooks();
 	}
 
-  let parseDomain = domain => {
-    if(domain.indexOf('http://') === -1 || domain.indexOf('https://') === -1) {
-      return "http://" + domain
-    }
-    return domain
-  }
   /**
    * This method register the webhook for all events on the Spark Api
    */
