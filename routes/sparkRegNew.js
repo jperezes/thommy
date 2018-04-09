@@ -45,7 +45,7 @@ const sendRequest = async (data, parentMethod) => {
 class SparkBotApi {
 	constructor(token, port, botdomain,webhookPort) {
     Object.assign(defaults.headers,{'Authorization': 'Bearer ' + token})
-		this.config = Object.assign({port, domain}, defaults);
+		this.config = Object.assign({port, botdomain}, defaults);
     this.sparkBotEmitter = new SparkBotEmitter();
     this.on = this.sparkBotEmitter.on
     this.app = express()
