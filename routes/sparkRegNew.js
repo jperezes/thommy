@@ -16,6 +16,13 @@ const defaults = {
 	timeout : 5000
 };
 
+const parseDomain = function(domain) {
+  if(domain.indexOf('http://') === -1 && domain.indexOf('https://') === -1) {
+    return "http://" + domain
+  }
+  return domain
+}
+
 // Send an API request
 const sendRequest = async (data, parentMethod) => {
   console.log("SPARK - API Sending object: " + JSON.stringify(data))
@@ -27,13 +34,6 @@ const sendRequest = async (data, parentMethod) => {
     throw e
   }
 };
-
-const parseDomain = function(domain) {
-  if(domain.indexOf('http://') === -1 && domain.indexOf('https://') === -1) {
-    return "http://" + domain
-  }
-  return domain
-}
 
 /**
  * SparkBotApi register the bot to Cisco Spark Api
@@ -47,16 +47,19 @@ class SparkBotApi {
     Object.assign(defaults.headers,{'Authorization': 'Bearer ' + token})
     let domain = parseDomain(botdomain)
 		this.config = Object.assign({port, domain}, defaults);
-    this.sparkBotEmitter = new EventEmitter();
+    this.sparkBotEmitter = new SparkBotEmitter();
+    this.on = this.sparkBotEmitter.on
     this.app = express()
     this.initServer(this.app);
     this.initializeWeebHooks();
 	}
 
-  on(eventName, callback) {
-    this.sparkBotEmitter.on(eventName,callback)
+  let parseDomain = domain => {
+    if(domain.indexOf('http://') === -1 || domain.indexOf('https://') === -1) {
+      return "http://" + domain
+    }
+    return domain
   }
-
   /**
    * This method register the webhook for all events on the Spark Api
    */
