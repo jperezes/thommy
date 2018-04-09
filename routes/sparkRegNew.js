@@ -16,13 +16,6 @@ const defaults = {
 	timeout : 5000
 };
 
-const parseDomain = function(domain) {
-  if(domain.indexOf('http://') === -1 && domain.indexOf('https://') === -1) {
-    return "http://" + domain
-  }
-  return domain
-}
-
 // Send an API request
 const sendRequest = async (data, parentMethod) => {
   console.log("SPARK - API Sending object: " + JSON.stringify(data))
@@ -47,7 +40,6 @@ class SparkBotApi {
     Object.assign(defaults.headers,{'Authorization': 'Bearer ' + token})
 		this.config = Object.assign({port, botdomain}, defaults);
     this.sparkBotEmitter = new SparkBotEmitter();
-    this.on = this.sparkBotEmitter.on
     this.app = express()
     this.initServer(this.app);
     this.initializeWeebHooks();
